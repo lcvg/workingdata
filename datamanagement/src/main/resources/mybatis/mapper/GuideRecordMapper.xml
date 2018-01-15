@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.GuideRecordDao" >
+
+    <sql id="baseColumns">
+        id, competitionName, competitionType,studentName, studentNumber, studentType,studentClass, guideDate,state
+    </sql>
+
+    <insert id="addGuideRecord" useGeneratedKeys="true" keyProperty="id" parameterType="GuideRecord">
+        insert into t_guiderecord (competitionName, competitionType,studentName, studentNumber, studentType,studentClass, guideDate,state)
+        values ( #{competitionName,jdbcType=VARCHAR}, #{competitionType,jdbcType=VARCHAR},
+        #{studentName,jdbcType=VARCHAR}, #{studentNumber,jdbcType=VARCHAR}, #{studentType,jdbcType=VARCHAR},
+        #{studentClass,jdbcType=VARCHAR}, #{guideDate,jdbcType=DATE}, #{state,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="addGuideRecordByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into t_guiderecord ( competitionName, competitionType,studentName, studentNumber, studentType,studentClass, guideDate,state)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            ( #{item.competitionName,jdbcType=VARCHAR}, #{item.competitionType,jdbcType=VARCHAR},
+            #{item.studentName,jdbcType=VARCHAR}, #{item.studentNumber,jdbcType=VARCHAR}, #{item.studentType,jdbcType=VARCHAR},
+            #{item.studentClass,jdbcType=VARCHAR}, #{item.guideDate,jdbcType=DATE}, #{item.state,jdbcType=VARCHAR})
+        </foreach>
+
+    </insert>
+
+    <update id="updateGuideRecord" parameterType="GuideRecord">
+        update t_guiderecord
+        <set>
+            <if test="competitionName != null">
+                competitionName = #{competitionName,jdbcType=VARCHAR},
+            </if>
+            <if test="competitionType != null">
+                competitionType = #{competitionType,jdbcType=VARCHAR},
+            </if>
+            <if test="studentName != null">
+                studentName = #{studentName,jdbcType=VARCHAR},
+            </if>
+            <if test="studentNumber != null">
+                studentNumber = #{studentNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="studentType != null">
+                studentType = #{studentType,jdbcType=VARCHAR},
+            </if>
+            <if test="studentClass != null">
+                studentClass = #{studentClass,jdbcType=VARCHAR},
+            </if>
+            <if test="guideDate != null">
+                guideDate = #{guideDate,jdbcType=DATE},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="checkByBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_guiderecord set state = 0 WHERE id = #{item}
+        </foreach>
+    </update>
+
+    <select id="getGuideRecord" resultType="GuideRecord">
+        select  <include refid="baseColumns"></include> from t_guiderecord
+        <if test="id !=0">
+            where id = ${id}
+        </if>
+    </select>
+    
+    <delete id="deleteGuideRecordByBatch" parameterType="java.util.List">
+        delete from t_guiderecord where id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

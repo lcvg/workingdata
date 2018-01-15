@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.BuildProjectDao" >
+
+    <sql id="baseColumns">
+        id, projectId, projectName,buildDate, teachingMethod, major,state
+    </sql>
+
+    <insert id="addBuildProject" useGeneratedKeys="true" keyProperty="id" parameterType="BuildProject">
+        insert into t_buildproject (projectId, projectName,buildDate, teachingMethod, major,state)
+        values (#{projectId,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR},#{buildDate,jdbcType=DATE}, #{teachingMethod,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR} ,#{state,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="addBuildProjectByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into t_buildproject (projectId, projectName,buildDate, teachingMethod, major,state)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.projectId,jdbcType=VARCHAR}, #{item.projectName,jdbcType=VARCHAR},
+            #{item.buildDate,jdbcType=DATE}, #{item.teachingMethod,jdbcType=VARCHAR}, #{item.major,jdbcType=VARCHAR} ,#{item.state,jdbcType=VARCHAR})
+        </foreach>
+
+    </insert>
+
+    <update id="updateBuildProject" parameterType="BuildProject">
+        update t_buildproject
+        <set>
+            <if test="projectId != null">
+                projectId = #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null">
+                projectName = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="buildDate != null">
+                buildDate = #{buildDate,jdbcType=DATE},
+            </if>
+            <if test="teachingMethod != null">
+                teachingMethod = #{teachingMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="major != null">
+                major = #{major,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="checkByBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_buildproject set state = 0 WHERE id = #{item}
+        </foreach>
+    </update>
+
+    <select id="getBuildProject" resultType="BuildProject">
+        select  <include refid="baseColumns"></include> from t_buildproject
+        <if test="id !=0">
+            where id = ${id}
+        </if>
+    </select>
+    
+    <delete id="deleteBuildProjectByBatch" parameterType="java.util.List">
+        delete from t_buildproject where id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

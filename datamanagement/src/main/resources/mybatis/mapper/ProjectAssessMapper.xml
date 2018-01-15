@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.ProjectAssessDao" >
+
+    <sql id="baseColumns">
+        id, projectName, projectId,assessMode, assessDate, state
+    </sql>
+
+    <insert id="addProjectAssessByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into t_projectassess ( projectName, projectId,assessMode, assessDate, state)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            ( #{item.projectName,jdbcType=VARCHAR}, #{item.projectId,jdbcType=VARCHAR},
+            #{item.assessMode,jdbcType=VARCHAR}, #{item.assessDate,jdbcType=DATE}, #{item.state,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <insert id="addProjectAssess" useGeneratedKeys="true" keyProperty="id" parameterType="ProjectAssess">
+         insert into t_projectassess ( projectName, projectId,assessMode, assessDate, state)
+        values  ( #{projectName,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR},
+            #{assessMode,jdbcType=VARCHAR}, #{assessDate,jdbcType=DATE}, #{state,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateProjectAssess" parameterType="ProjectAssess">
+        update t_projectassess
+        <set>
+            <if test="projectName != null">
+                projectName = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                projectId = #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="assessMode != null">
+                assessMode = #{assessMode,jdbcType=VARCHAR},
+            </if>
+            <if test="assessDate != null">
+                assessDate = #{assessDate,jdbcType=DATE},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getProjectAssess" resultType="ProjectAssess">
+        select  <include refid="baseColumns"></include> from t_projectassess
+        <if test="id !=0">
+            where id = ${id}
+        </if>
+    </select>
+    
+    <delete id="deleteProjectAssessByBatch" parameterType="java.util.List">
+        delete from t_projectassess where id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="checkByBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_projectassess set state = 0 WHERE id = #{item}
+        </foreach>
+    </update>
+
+</mapper>

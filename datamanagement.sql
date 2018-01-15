@@ -1,22 +1,22 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 本地
-Source Server Version : 50703
+Source Server         : Mydata
+Source Server Version : 50625
 Source Host           : localhost:3306
 Source Database       : datamanagement
 
 Target Server Type    : MYSQL
-Target Server Version : 50703
+Target Server Version : 50625
 File Encoding         : 65001
 
-Date: 2018-01-11 21:45:05
+Date: 2018-01-15 19:33:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `t_authority`
+-- Table structure for t_authority
 -- ----------------------------
 DROP TABLE IF EXISTS `t_authority`;
 CREATE TABLE `t_authority` (
@@ -30,7 +30,7 @@ CREATE TABLE `t_authority` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_awardrecords`
+-- Table structure for t_awardrecords
 -- ----------------------------
 DROP TABLE IF EXISTS `t_awardrecords`;
 CREATE TABLE `t_awardrecords` (
@@ -47,7 +47,7 @@ CREATE TABLE `t_awardrecords` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_buildproject`
+-- Table structure for t_buildproject
 -- ----------------------------
 DROP TABLE IF EXISTS `t_buildproject`;
 CREATE TABLE `t_buildproject` (
@@ -66,7 +66,7 @@ CREATE TABLE `t_buildproject` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_data`
+-- Table structure for t_data
 -- ----------------------------
 DROP TABLE IF EXISTS `t_data`;
 CREATE TABLE `t_data` (
@@ -85,7 +85,7 @@ CREATE TABLE `t_data` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_guiderecord`
+-- Table structure for t_guiderecord
 -- ----------------------------
 DROP TABLE IF EXISTS `t_guiderecord`;
 CREATE TABLE `t_guiderecord` (
@@ -94,17 +94,21 @@ CREATE TABLE `t_guiderecord` (
   `competitionType` varchar(16) NOT NULL,
   `studentName` varchar(8) NOT NULL,
   `studentNumber` varchar(10) NOT NULL,
+  `studentType` varchar(6) NOT NULL,
+  `studentClass` varchar(16) NOT NULL,
   `guideDate` date NOT NULL,
   `state` varchar(4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_guiderecord
 -- ----------------------------
+INSERT INTO `t_guiderecord` VALUES ('2', '蓝桥杯', '国家级', '小明', '8000114110', '本科生', '东软141', '2018-01-15', '1');
+INSERT INTO `t_guiderecord` VALUES ('4', '蓝桥杯', '国家级', '小明', '8000114110', '本科生', '东软141', '2018-01-15', '1');
 
 -- ----------------------------
--- Table structure for `t_log`
+-- Table structure for t_log
 -- ----------------------------
 DROP TABLE IF EXISTS `t_log`;
 CREATE TABLE `t_log` (
@@ -121,7 +125,7 @@ CREATE TABLE `t_log` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_projectassess`
+-- Table structure for t_projectassess
 -- ----------------------------
 DROP TABLE IF EXISTS `t_projectassess`;
 CREATE TABLE `t_projectassess` (
@@ -129,7 +133,7 @@ CREATE TABLE `t_projectassess` (
   `projectName` varchar(32) NOT NULL,
   `projectId` varchar(16) NOT NULL,
   `assessMode` varchar(8) NOT NULL,
-  `assessDate` datetime NOT NULL,
+  `assessDate` date NOT NULL,
   `state` varchar(4) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -139,7 +143,7 @@ CREATE TABLE `t_projectassess` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_teacher`
+-- Table structure for t_teacher
 -- ----------------------------
 DROP TABLE IF EXISTS `t_teacher`;
 CREATE TABLE `t_teacher` (
@@ -153,14 +157,23 @@ CREATE TABLE `t_teacher` (
   `phoneNumber` varchar(11) NOT NULL,
   `permission` varchar(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_teacher
 -- ----------------------------
+INSERT INTO `t_teacher` VALUES ('1', '王浪', '03442', '男', '0331', '教授', '授课，实践研究', '13998732277', '高级');
+INSERT INTO `t_teacher` VALUES ('3', '王浪', '0', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
+INSERT INTO `t_teacher` VALUES ('6', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
+INSERT INTO `t_teacher` VALUES ('7', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
+INSERT INTO `t_teacher` VALUES ('10', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
+INSERT INTO `t_teacher` VALUES ('11', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
+INSERT INTO `t_teacher` VALUES ('12', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
+INSERT INTO `t_teacher` VALUES ('13', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
+INSERT INTO `t_teacher` VALUES ('14', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
 
 -- ----------------------------
--- Table structure for `t_teachingreform`
+-- Table structure for t_teachingreform
 -- ----------------------------
 DROP TABLE IF EXISTS `t_teachingreform`;
 CREATE TABLE `t_teachingreform` (
@@ -180,7 +193,7 @@ CREATE TABLE `t_teachingreform` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_textbook`
+-- Table structure for t_textbook
 -- ----------------------------
 DROP TABLE IF EXISTS `t_textbook`;
 CREATE TABLE `t_textbook` (

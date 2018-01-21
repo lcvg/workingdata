@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.TeachingReformDao" >
+
+    <sql id="baseColumns">
+        id, projectName, projectId,projectType, reportTime,compere, projectIntroduce, state
+    </sql>
+
+    <insert id="addTeachingReformByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into t_teachingreform (projectName, projectId,projectType, reportTime,compere, projectIntroduce, state)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            ( #{item.projectName,jdbcType=VARCHAR}, #{item.projectId,jdbcType=VARCHAR},
+            #{item.projectType,jdbcType=VARCHAR}, #{item.reportTime,jdbcType=DATE},  #{item.compere,jdbcType=VARCHAR},
+            #{item.projectIntroduce,jdbcType=VARCHAR},#{item.state,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <insert id="addTeachingReform" useGeneratedKeys="true" keyProperty="id" parameterType="TeachingReform">
+         insert into t_teachingreform (projectName, projectId,projectType, reportTime,compere, projectIntroduce, state)
+        values   ( #{projectName,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR},
+            #{projectType,jdbcType=VARCHAR}, #{reportTime,jdbcType=DATE},  #{compere,jdbcType=VARCHAR},
+            #{projectIntroduce,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateTeachingReform" parameterType="TeachingReform">
+        update t_teachingreform
+        <set>
+            <if test="projectName != null">
+                projectName = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                projectId = #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectType != null">
+                projectType = #{projectType,jdbcType=VARCHAR},
+            </if>
+            <if test="reportTime != null">
+                reportTime = #{reportTime,jdbcType=DATE},
+            </if>
+            <if test="compere != null">
+                compere = #{compere,jdbcType=VARCHAR},
+            </if>
+            <if test="projectIntroduce != null">
+                projectIntroduce = #{projectIntroduce,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getTeachingReform" resultType="TeachingReform">
+        select  <include refid="baseColumns"></include> from t_teachingreform
+        <if test="id !=0">
+            where id = ${id}
+        </if>
+    </select>
+    
+    <delete id="deleteTeachingReformByBatch" parameterType="java.util.List">
+        delete from t_teachingreform where id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="checkByBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_teachingreform set state = 0 WHERE id = #{item}
+        </foreach>
+    </update>
+
+    <update id="checkNoByBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_teachingreform set state = 2 WHERE id = #{item}
+        </foreach>
+    </update>
+
+</mapper>

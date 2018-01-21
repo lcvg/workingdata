@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.TextBookDao" >
+
+    <sql id="baseColumns">
+        id, textbook, type,isbn, press, publishDate,compose , introduce , state
+    </sql>
+
+    <insert id="addTextBook" useGeneratedKeys="true" keyProperty="id" parameterType="TextBook">
+        insert into t_textbook (textbook, type,isbn, press, publishDate,compose , introduce , state)
+        values (#{textbook,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},#{isbn,jdbcType=VARCHAR},
+        #{press,jdbcType=VARCHAR},#{publishDate,jdbcType=DATE}, #{compose,jdbcType=VARCHAR},
+        #{introduce,jdbcType=VARCHAR} ,#{state,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="addTextBookByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into t_textbook (textbook, type,isbn, press, publishDate,compose , introduce , state)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.textbook,jdbcType=VARCHAR}, #{item.type,jdbcType=VARCHAR},#{item.isbn,jdbcType=VARCHAR},
+            #{item.press,jdbcType=VARCHAR},#{item.publishDate,jdbcType=DATE}, #{item.compose,jdbcType=VARCHAR},
+            #{item.introduce,jdbcType=VARCHAR} ,#{item.state,jdbcType=VARCHAR})
+        </foreach>
+
+    </insert>
+
+    <update id="updateTextBook" parameterType="TextBook">
+        update t_textbook
+        <set>
+            <if test="textbook != null">
+                textbook = #{textbook,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="isbn != null">
+                isbn = #{isbn,jdbcType=VARCHAR},
+            </if>
+            <if test="press != null">
+                press = #{press,jdbcType=VARCHAR},
+            </if>
+            <if test="publishDate != null">
+                publishDate = #{publishDate,jdbcType=DATE},
+            </if>
+            <if test="compose != null">
+                compose = #{compose,jdbcType=VARCHAR},
+            </if>
+            <if test="introduce != null">
+                introduce = #{introduce,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="checkByBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_textbook set state = 0 WHERE id = #{item}
+        </foreach>
+    </update>
+
+    <update id="checkNoByBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_textbook set state = 2 WHERE id = #{item}
+        </foreach>
+    </update>
+
+    <select id="getTextBook" resultType="TextBook">
+        select  <include refid="baseColumns"></include> from t_textbook
+        <if test="id !=0">
+            where id = ${id}
+        </if>
+    </select>
+    
+    <delete id="deleteTextBookByBatch" parameterType="java.util.List">
+        delete from t_textbook where id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

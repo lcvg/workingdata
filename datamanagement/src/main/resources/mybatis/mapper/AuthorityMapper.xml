@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.AuthorityDao" >
+
+    <sql id="baseColumns">
+        id, name, authorityCode
+    </sql>
+
+    <insert id="addAuthority" useGeneratedKeys="true" keyProperty="id" parameterType="Authority">
+         insert into t_authority (name, authorityCode)
+        values  ( #{name,jdbcType=VARCHAR}, #{authorityCode,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateAuthority" parameterType="Log">
+        update t_authority
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="authorityCode != null">
+                authorityCode = #{authorityCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getAuthority" resultType="Authority">
+        select  <include refid="baseColumns"></include> from t_authority
+        <if test="id !=0">
+            where id = ${id}
+        </if>
+    </select>
+    
+    <delete id="deleteAuthority" parameterType="java.lang.Integer">
+        delete from t_authority where id =#{id}
+
+    </delete>
+
+
+
+</mapper>

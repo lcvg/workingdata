@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.DataDao" >
+
+    <sql id="baseColumns">
+        id, dataId, dataType,owner, ownerName, dataName,dataPath,recordId,uploadDate
+    </sql>
+
+    <insert id="addData" useGeneratedKeys="true" keyProperty="id" parameterType="Data">
+        insert into t_data (dataId, dataType,owner, ownerName, dataName,dataPath,recordId ,uploadDate )
+        values (#{dataId,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR},#{owner}, #{ownerName,jdbcType=VARCHAR},
+        #{dataName,jdbcType=VARCHAR} ,#{dataPath,jdbcType=VARCHAR} ,#{recordId,jdbcType=VARCHAR} ,#{uploadDate})
+    </insert>
+
+    <insert id="addDataByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into t_data (dataId, dataType,owner, ownerName, dataName,dataPath,recordId,uploadDate)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{dataId,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR},#{owner}, #{ownerName,jdbcType=VARCHAR},
+            #{dataName,jdbcType=VARCHAR} ,#{dataPath,jdbcType=VARCHAR} ,#{recordId,jdbcType=VARCHAR} ,#{uploadDate})
+        </foreach>
+
+    </insert>
+
+
+
+    <select id="getData" resultType="Data">
+        select  <include refid="baseColumns"></include> from t_data
+        <if test="id !=0">
+            where id = ${id}
+        </if>
+    </select>
+    <delete id="deleteDataByBatch" parameterType="java.util.List">
+        delete from t_data where id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

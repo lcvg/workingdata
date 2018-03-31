@@ -3,6 +3,7 @@ package com.ncu;
 import com.ncu.dao.AwardRecordsDao;
 import com.ncu.dao.TeachingReformDao;
 import com.ncu.model.AwardRecords;
+import com.ncu.model.Query;
 import com.ncu.model.TeachingReform;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,7 @@ public class testAwardRecords {
         awardRecords.setAwardContent("蓝桥杯");
         awardRecords.setAwardLevel("省级");
         awardRecords.setAwardDate(new Date());
+        awardRecords.setJobNumber("1");
          log.info("add = " + awardRecordsDao.addAwardRecords(awardRecords));
 
 
@@ -52,12 +54,13 @@ public class testAwardRecords {
     @Test
     public void addByBatch(){
         List<AwardRecords> awardRecordss = new ArrayList<>();
-        for (int i = 0;i < 4;i++){
+        for (int i = 0;i < 2;i++){
             AwardRecords awardRecords = new AwardRecords();
             awardRecords.setState("1");
-            awardRecords.setAwardContent("蓝桥杯");
+            awardRecords.setAwardContent("ddd");
             awardRecords.setAwardLevel("省级");
             awardRecords.setAwardDate(new Date());
+            awardRecords.setJobNumber("4");
             awardRecordss.add(awardRecords);
         }
 
@@ -94,10 +97,10 @@ public class testAwardRecords {
 
     @Test
     public void get(){
-
+        Query query = new Query();
         log.debug("wodedeubg");
-        log.info("ddfdff"+awardRecordsDao.getAwardRecords(1)+"");
-        log.info("ddfdff"+awardRecordsDao.getAwardRecords(0)+"");
+        log.info("ddfdff"+awardRecordsDao.getAwardRecords(query)+"");
+        log.info("ddfdff");
     }
     @Test
     public void delete(){

@@ -64,10 +64,10 @@ public class testLog {
 
     @Test
     public void get(){
-
-        log.debug("wodedeubg");
-        log.info("ddfdff"+logDao.getLog(1)+"");
-        log.info("ddfdff"+logDao.getLog(0)+"");
+//
+//        log.debug("wodedeubg");
+//        log.info("ddfdff"+logDao.getLog(1)+"");
+//        log.info("ddfdff"+logDao.getLog(0)+"");
     }
     @Test
     public void delete(){

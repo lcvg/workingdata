@@ -1,9 +1,12 @@
 package com.ncu.dao;
 
 import com.ncu.model.Teacher;
+import com.ncu.model.TeacherVO;
+import com.ncu.model.TeacherQuery;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 @Repository
 public interface TeacherDao {
@@ -30,14 +33,28 @@ public interface TeacherDao {
 
     /**
      * 查询教师信息
-     * @param id
+     * @param teacherQuery
      * @return
      */
-    List<Teacher> getTeacher(@Param("id") Integer id);
+    List<TeacherVO> getTeacher(TeacherQuery teacherQuery);
 
     /**
      *批量删除
      * @param ids
      */
     void deleteTeacherByBatch(List<Integer> ids);
+
+    /**
+     * 按获奖记录排序
+     */
+    List<TeacherVO> getTeacherByAward(TeacherQuery teacherQuery);
+    List<TeacherVO> getTeacherAndCount(TeacherQuery teacherQuery);
+
+
+    int getSize(TeacherQuery teacherQuery);
+
+    int decRecord(@Param("type") String type,@Param("jobNumber") String jobNumber);
+    int incRecord(@Param("type") String type,@Param("jobNumber") String jobNumber);
+
+
 }

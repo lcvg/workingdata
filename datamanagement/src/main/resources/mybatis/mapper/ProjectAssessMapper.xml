@@ -1,24 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ncu.dao.ProjectAssessDao" >
-
+    <resultMap id="findMap" type="ProjectAssess">
+        <id column="id" property="id"/>
+        <collection property="listData" column="id" select="findAttachment"/>
+    </resultMap>
+    <select id="findAttachment" parameterType="java.lang.Integer" resultType="Data">
+        SELECT * from t_data WHERE dataType = "3" and recordId = #{id}
+    </select>
     <sql id="baseColumns">
-        id, projectName, projectId,assessMode, assessDate, state
+       id, projectName, projectId,assessMode, assessDate, state,jobNumber,name
+    </sql>
+    <sql id="selectCondition">
+        <if test=" id != null">
+            id = #{id}
+        </if>
+        <if test="timeQuantum == 1">
+            and <![CDATA[ assessDate<endDate AND assessDate>beginDate ]]>
+        </if>
+        <if test="jobNumber != null and jobNumber !=''">
+            and jobNumber = #{jobNumber}
+        </if>
+        <if test="condition != null">
+            and <![CDATA[ LOCATE(#{condition},projectName)]]>
+        </if>
+        <if test="projectId != null">
+            and projectId =#{projectId}
+        </if>
+        <if test="state != null and state != ''">
+            and state =#{state}
+        </if>
+        <if test="assessMode != null and assessMode != ''">
+            and assessMode =#{assessMode}
+        </if>
+        <if test="name != null ">
+            and <![CDATA[ LOCATE(#{name},name)]]>
+        </if>
+
     </sql>
 
     <insert id="addProjectAssessByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
-        insert into t_projectassess ( projectName, projectId,assessMode, assessDate, state)
+        insert into t_projectassess ( projectName, projectId,assessMode, assessDate, state,jobNumber,name)
         values
         <foreach collection="list" item="item" index="index" separator="," >
             ( #{item.projectName,jdbcType=VARCHAR}, #{item.projectId,jdbcType=VARCHAR},
-            #{item.assessMode,jdbcType=VARCHAR}, #{item.assessDate,jdbcType=DATE}, #{item.state,jdbcType=VARCHAR})
+            #{item.assessMode,jdbcType=VARCHAR}, #{item.assessDate,jdbcType=DATE}, #{item.state,jdbcType=VARCHAR},#{item.jobNumber},#{item.name})
         </foreach>
     </insert>
 
     <insert id="addProjectAssess" useGeneratedKeys="true" keyProperty="id" parameterType="ProjectAssess">
-         insert into t_projectassess ( projectName, projectId,assessMode, assessDate, state)
+         insert into t_projectassess ( projectName, projectId,assessMode, assessDate, state,jobNumber,name)
         values  ( #{projectName,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR},
-            #{assessMode,jdbcType=VARCHAR}, #{assessDate,jdbcType=DATE}, #{state,jdbcType=VARCHAR})
+            #{assessMode,jdbcType=VARCHAR}, #{assessDate,jdbcType=DATE}, #{state,jdbcType=VARCHAR},#{jobNumber},#{name})
     </insert>
 
     <update id="updateProjectAssess" parameterType="ProjectAssess">
@@ -39,18 +72,30 @@
             <if test="state != null">
                 state = #{state,jdbcType=VARCHAR},
             </if>
+            <if test="jobNumber != null">
+                jobNumber = #{jobNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
 
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="getProjectAssess" resultType="ProjectAssess">
-        select  <include refid="baseColumns"></include> from t_projectassess
-        <if test="id !=0">
-            where id = ${id}
-        </if>
+    <select id="getProjectAssess" resultMap="findMap" parameterType="Query">
+        select  <include refid="baseColumns"/> from t_projectassess
+        <where>
+            <include refid="selectCondition"/>
+
+        </where>
     </select>
-    
+    <select id="getSize" resultType="java.lang.Integer" parameterType="Query">
+        select  count(1) from t_projectassess
+        <where>
+            <include refid="selectCondition"/>
+        </where>
+    </select>
     <delete id="deleteProjectAssessByBatch" parameterType="java.util.List">
         delete from t_projectassess where id in
         <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
@@ -61,6 +106,11 @@
     <update id="checkByBatch" parameterType="java.util.List">
         <foreach collection="list" separator=";" item="item">
             update t_projectassess set state = 0 WHERE id = #{item}
+        </foreach>
+    </update>
+    <update id="checkNoByBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_projectassess set state = 2 WHERE id = #{item}
         </foreach>
     </update>
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.FixedDao" >
+
+    <sql id="baseColumns">
+        id, name, authorityCode
+    </sql>
+
+    <insert id="addAuthority" useGeneratedKeys="true" keyProperty="id" parameterType="Authority">
+         insert into t_authority (name, authorityCode)
+        values  ( #{name,jdbcType=VARCHAR}, #{authorityCode,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateAuthority" parameterType="Log">
+        update t_authority
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="authorityCode != null">
+                authorityCode = #{authorityCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getAuthority" resultType="Authority">
+        select  <include refid="baseColumns"></include> from t_authority
+        <if test="id !=0">
+            where id = ${id}
+        </if>
+    </select>
+    
+    <delete id="deleteAuthority" parameterType="java.lang.Integer">
+        delete from t_authority where id =#{id}
+
+    </delete>
+
+
+    <!--部门操作sql-->
+    <insert id="addDepartment" useGeneratedKeys="true" keyProperty="id" parameterType="Department">
+        insert into t_department (depId, depName)
+        values  ( #{depId,jdbcType=VARCHAR}, #{depName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="addDepartmentByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into t_department (depId, depName)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            ( #{item.depId,jdbcType=VARCHAR}, #{item.depName,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <update id="updateDepartment" parameterType="Department">
+        update t_department
+        <set>
+            <if test="depId != null">
+                depId = #{depId,jdbcType=VARCHAR},
+            </if>
+            <if test="depName != null">
+                depName = #{depName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <select id="findDepartment" resultType="Department">
+        select * from t_department
+        <if test="depName != null ">
+            where <![CDATA[LOCATE(#{depName},depName)>0 ]]>
+        </if>
+    </select>
+    <delete id="deleteDepartment" parameterType="java.lang.Integer">
+        delete from t_department where id =#{id}
+
+    </delete>
+</mapper>

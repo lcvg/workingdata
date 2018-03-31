@@ -1,6 +1,7 @@
 package com.ncu.dao;
 
 import com.ncu.model.ProjectAssess;
+import com.ncu.model.Query;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,9 @@ public interface ProjectAssessDao {
     Integer addProjectAssessByBatch(List<ProjectAssess> projectAssesses);
     Integer addProjectAssess(ProjectAssess projectAssess);
     Integer updateProjectAssess(ProjectAssess projectAssess);
-    List<ProjectAssess> getProjectAssess(@Param("id") Integer id);
+    List<ProjectAssess> getProjectAssess(Query query);
+    int getSize(Query query);
     void deleteProjectAssessByBatch(List<Integer> ids);
     void checkByBatch(List<Integer> ids);
+    void checkNoByBatch(List<Integer> ids);
 }

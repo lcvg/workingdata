@@ -1,0 +1,2 @@
+===2018-02-25 15:48:04.151 WARN  org.springframework.web.servlet.PageNotFound Line:215 - Request method 'POST' not supported
+===2018-02-25 15:48:04.161 WARN  org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver Line:189 - Resolved exception caused by Handler execution: org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported

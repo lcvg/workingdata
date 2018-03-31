@@ -5,36 +5,65 @@
     <sql id="baseColumns">
         id, dataId, dataType,owner, ownerName, dataName,dataPath,recordId,uploadDate
     </sql>
+    <sql id="selectCondition">
+        <if test=" id != null">
+            id = #{id}
+        </if>
+        <if test="timeQuantum == 1">
+            and <![CDATA[ uploadDate<endDate AND uploadDate>beginDate ]]>
+        </if>
+        <if test="jobNumber != null and jobNumber != ''">
+            and owner = #{jobNumber}
+        </if>
+        <if test="name != null">
+            and <![CDATA[ LOCATE(#{name},ownerName)>0]]>
+        </if>
+        <if test="condition != null">
+            and <![CDATA[ LOCATE(#{condition},projectName)>0]]>
+        </if>
+        <if test="dataType != null and dataType!=''">
+            and dataType = #{dataType}
+        </if>
+    </sql>
 
     <insert id="addData" useGeneratedKeys="true" keyProperty="id" parameterType="Data">
         insert into t_data (dataId, dataType,owner, ownerName, dataName,dataPath,recordId ,uploadDate )
         values (#{dataId,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR},#{owner}, #{ownerName,jdbcType=VARCHAR},
-        #{dataName,jdbcType=VARCHAR} ,#{dataPath,jdbcType=VARCHAR} ,#{recordId,jdbcType=VARCHAR} ,#{uploadDate})
+        #{dataName,jdbcType=VARCHAR} ,#{dataPath,jdbcType=VARCHAR} ,#{recordId} ,#{uploadDate})
     </insert>
 
     <insert id="addDataByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
         insert into t_data (dataId, dataType,owner, ownerName, dataName,dataPath,recordId,uploadDate)
         values
         <foreach collection="list" index="index" item="item" separator=",">
-            (#{dataId,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR},#{owner}, #{ownerName,jdbcType=VARCHAR},
-            #{dataName,jdbcType=VARCHAR} ,#{dataPath,jdbcType=VARCHAR} ,#{recordId,jdbcType=VARCHAR} ,#{uploadDate})
+            (#{item.dataId,jdbcType=VARCHAR}, #{item.dataType,jdbcType=VARCHAR},#{item.owner}, #{item.ownerName,jdbcType=VARCHAR},
+            #{item.dataName,jdbcType=VARCHAR} ,#{item.dataPath,jdbcType=VARCHAR} ,#{item.recordId} ,#{item.uploadDate})
         </foreach>
 
     </insert>
 
 
 
-    <select id="getData" resultType="Data">
-        select  <include refid="baseColumns"></include> from t_data
-        <if test="id !=0">
-            where id = ${id}
-        </if>
+    <select id="getData" resultType="Data" parameterType="Query">
+        select  <include refid="baseColumns"/> from t_data
+       <where>
+           <include refid="selectCondition"/>
+       </where>
+    </select>
+    <select id="getSize" resultType="java.lang.Integer" parameterType="Query">
+        select  count(1) from t_data
+        <where>
+            <include refid="selectCondition"/>
+        </where>
     </select>
     <delete id="deleteDataByBatch" parameterType="java.util.List">
         delete from t_data where id in
         <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </delete>
+    <delete id="deleteByRecord" >
+        delete from t_data where recordId = #{recordId} and dataType = #{dataType}
     </delete>
 
 </mapper>

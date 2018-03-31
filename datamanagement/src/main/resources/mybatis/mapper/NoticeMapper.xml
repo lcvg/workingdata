@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.NoticeDao" >
+
+    <resultMap id="findMap" type="Notice">
+        <id column="id" property="id"/>
+        <collection property="listData" column="id" select="findAttachment"/>
+    </resultMap>
+    <select id="findAttachment" parameterType="java.lang.Integer" resultType="Data">
+        SELECT * from t_data WHERE dataType = "7" and recordId = #{id}
+    </select>
+
+    <sql id="baseColumns">
+        id, title, content,department,createDate,state
+    </sql>
+    <sql id="selectCondition">
+        <if test=" id != null">
+            id = #{id}
+        </if>
+        <if test="timeQuantum == 1">
+            and <![CDATA[ createDate<endDate AND createDate>beginDate ]]>
+        </if>
+        <if test="jobNumber != null">
+            and jobNumber = #{jobNumber}
+        </if>
+        <if test="condition != null">
+            and <![CDATA[ LOCATE(#{condition},title)>0]]>
+        </if>
+        <if test="department != null">
+            and <![CDATA[ LOCATE(#{department},department)>0]]>
+        </if>
+        <if test="state != null">
+            and state = #{state}
+        </if>
+    </sql>
+
+
+
+    <insert id="addNotice" useGeneratedKeys="true" keyProperty="id" parameterType="Notice">
+         insert into t_notice (title, content,department,createDate,state)
+        values   ( #{title,jdbcType=VARCHAR}, #{content},
+             #{department},#{createDate},#{state})
+    </insert>
+
+    <update id="updateNotice" parameterType="Notice">
+        update t_notice
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+
+            <if test="content != null">
+                content = #{content},
+            </if>
+
+            <if test="department != null">
+                department = #{department},
+            </if>
+            <if test="createDate != null">
+                createDate = #{createDate},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getNotice" resultMap="findMap" parameterType="Query">
+        select  <include refid="baseColumns"/> from t_notice
+        <where>
+            <include refid="selectCondition"/>
+        </where>
+    </select>
+
+    
+    <delete id="deleteNotice" parameterType="java.util.List">
+        delete from t_notice where id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

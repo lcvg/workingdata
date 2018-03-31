@@ -103,12 +103,12 @@ public class testGuideRecord {
         guideRecordDao.checkByBatch(list);
     }
 
-    @Test
-    public void get(){
-
-        log.debug("wodedeubg");
-        log.info("ddfdff"+guideRecordDao.getGuideRecord(1)+"");
-    }
+//    @Test
+//    public void get(){
+//
+//        log.debug("wodedeubg");
+//        log.info("ddfdff"+guideRecordDao.getGuideRecord(1)+"");
+//    }
     @Test
     public void delete(){
         List<Integer> list = new ArrayList<>();

@@ -1,5 +1,7 @@
 package com.ncu.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,7 +14,7 @@ import java.util.Date;
  * @Date:Created in 9:16 2018/1/15
  * @Modified By:
  */
-public class GuideRecord implements Serializable {
+public class GuideRecord extends Attachment implements Serializable {
     /**
      * 编号
      */
@@ -38,17 +40,37 @@ public class GuideRecord implements Serializable {
      */
     private String studentType;
     /**
-     * 指导学生类型
+     * 指导学生班级
      */
     private String studentClass;
     /**
      * 指导时间
      */
+    @JSONField(format="yyyy-MM-dd HH:mm")
     private Date guideDate;
     /**
      * 审核状态
      */
     private String state;
+
+    private String jobNumber;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getJobNumber() {
+        return jobNumber;
+    }
+
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
+    }
 
     public Integer getId() {
         return id;

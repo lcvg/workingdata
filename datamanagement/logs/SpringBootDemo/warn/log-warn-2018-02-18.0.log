@@ -1,0 +1,2 @@
+===2018-02-18 18:15:24.236 WARN  org.springframework.web.servlet.PageNotFound Line:215 - Request method 'POST' not supported
+===2018-02-18 18:19:36.525 WARN  org.springframework.web.servlet.PageNotFound Line:1176 - No mapping found for HTTP request with URI [/favicon.ico] in DispatcherServlet with name 'dispatcherServlet'

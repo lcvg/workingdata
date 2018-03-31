@@ -101,13 +101,13 @@ public class testTeachingReform {
         teachingReformDao.checkNoByBatch(list);
     }
 
-    @Test
-    public void get(){
-
-        log.debug("wodedeubg");
-        log.info("ddfdff"+teachingReformDao.getTeachingReform(1)+"");
-        log.info("ddfdff"+teachingReformDao.getTeachingReform(0)+"");
-    }
+//    @Test
+//    public void get(){
+//
+//        log.debug("wodedeubg");
+//        log.info("ddfdff"+teachingReformDao.getTeachingReform(1)+"");
+//        log.info("ddfdff"+teachingReformDao.getTeachingReform(0)+"");
+//    }
     @Test
     public void delete(){
         List<Integer> list = new ArrayList<>();

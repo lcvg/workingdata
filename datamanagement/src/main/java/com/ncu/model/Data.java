@@ -1,5 +1,9 @@
 package com.ncu.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,6 +20,7 @@ public class Data implements Serializable {
     private String dataName;
     private String dataPath;
     private Integer recordId;
+    @JSONField(format="yyyy-MM-dd HH:mm")
     private Date uploadDate;
 
     public Integer getId() {
@@ -82,11 +87,11 @@ public class Data implements Serializable {
         this.recordId = recordId;
     }
 
-    public Date getUpDate() {
+    public Date getUploadDate() {
         return uploadDate;
     }
 
-    public void setUpDate(Date uploadDate) {
+    public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
     }
 }

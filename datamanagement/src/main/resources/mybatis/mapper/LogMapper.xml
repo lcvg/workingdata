@@ -5,6 +5,23 @@
     <sql id="baseColumns">
         id, operator, operatorName,step, operationTime
     </sql>
+    <sql id="selectCondition">
+        <if test=" jobNumber!= null and jobNumber != ''">
+            operator = #{jobNumber}
+        </if>
+        <if test=" name!= null">
+            and <![CDATA[ LOCATE(#{name},operatorName)]]>
+        </if>
+        <if test=" condition !=null and condition != ''">
+            and <![CDATA[ LOCATE(#{condition},step)]]>
+        </if>
+        <if test="beginDate!=null and beginDate!=null ">
+            and <![CDATA[ operationTime>#{beginDate} ]]>
+        </if>
+        <if test="endDate!=null and endDate!=null ">
+            and <![CDATA[ operationTime<#{endDate}  ]]>
+        </if>
+    </sql>
 
     <insert id="addLog" useGeneratedKeys="true" keyProperty="id" parameterType="Log">
          insert into t_log (operator, operatorName,step, operationTime)
@@ -33,20 +50,24 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="getLog" resultType="Log">
-        select  <include refid="baseColumns"></include> from t_log
-        <if test="id !=0">
-            where id = ${id}
-        </if>
+    <select id="getLog" resultType="Log" parameterType="Query">
+        select  <include refid="baseColumns"/> from t_log
+        <where>
+            <include refid="selectCondition"/>
+        </where>
+        ORDER by operationTime desc
     </select>
-    
+    <select id="getSize" resultType="java.lang.Integer">
+        select count(1) from t_log
+        <where>
+            <include refid="selectCondition"/>
+        </where>
+    </select>
     <delete id="deleteLogByBatch" parameterType="java.util.List">
         delete from t_log where id in
         <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-
-
 
 </mapper>

@@ -44,7 +44,7 @@ public class testData {
         data.setOwner("0258");
         data.setOwnerName("hcy");
         data.setRecordId(4);
-        data.setUpDate(new Date());
+        data.setUploadDate(new Date());
 
          log.info("add = " + dataDao.addData(data));
 
@@ -54,14 +54,14 @@ public class testData {
 
 
 
-
-    @Test
-    public void get(){
-
-        log.debug("wodedeubg");
-        log.info("ddfdff"+dataDao.getData(1)+"");
-        log.info("ddfdff"+dataDao.getData(0)+"");
-    }
+//
+//    @Test
+//    public void get(){
+//
+//        log.debug("wodedeubg");
+//        log.info("ddfdff"+dataDao.getData(1)+"");
+//        log.info("ddfdff"+dataDao.getData(0)+"");
+//    }
     @Test
     public void delete(){
         List<Integer> list = new ArrayList<>();

@@ -1,5 +1,7 @@
 package com.ncu.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,8 +11,10 @@ import java.util.Date;
 public class Log implements Serializable{
     private Integer id;
     private String operator;
+
     private String operatorName;
     private String step;
+    @JSONField(format="yyyy-MM-dd HH:mm")
     private Date operationTime;
 
     public Integer getId() {

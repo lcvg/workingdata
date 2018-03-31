@@ -1,0 +1,14 @@
+===2018-02-13 16:29:20.881 WARN  org.springframework.web.servlet.PageNotFound Line:1176 - No mapping found for HTTP request with URI [/favicon.ico] in DispatcherServlet with name 'dispatcherServlet'
+===2018-02-13 16:34:39.875 WARN  org.springframework.web.servlet.PageNotFound Line:1176 - No mapping found for HTTP request with URI [/d.html] in DispatcherServlet with name 'dispatcherServlet'
+===2018-02-13 20:20:26.177 WARN  org.springframework.web.servlet.PageNotFound Line:1176 - No mapping found for HTTP request with URI [/favicon.ico] in DispatcherServlet with name 'dispatcherServlet'
+===2018-02-13 20:43:50.362 WARN  org.springframework.web.servlet.PageNotFound Line:215 - Request method 'POST' not supported
+===2018-02-13 20:43:54.144 WARN  org.springframework.web.servlet.PageNotFound Line:215 - Request method 'POST' not supported
+===2018-02-13 21:44:04.234 WARN  org.springframework.web.servlet.PageNotFound Line:215 - Request method 'POST' not supported
+===2018-02-13 21:53:46.844 WARN  org.springframework.web.servlet.PageNotFound Line:1176 - No mapping found for HTTP request with URI [/updateConfing] in DispatcherServlet with name 'dispatcherServlet'
+===2018-02-13 21:53:46.868 WARN  org.springframework.web.servlet.PageNotFound Line:215 - Request method 'POST' not supported
+===2018-02-13 21:53:56.371 WARN  org.springframework.web.servlet.PageNotFound Line:1176 - No mapping found for HTTP request with URI [/updateConfing] in DispatcherServlet with name 'dispatcherServlet'
+===2018-02-13 21:53:56.384 WARN  org.springframework.web.servlet.PageNotFound Line:215 - Request method 'POST' not supported
+===2018-02-13 21:54:09.479 WARN  org.springframework.web.servlet.PageNotFound Line:1176 - No mapping found for HTTP request with URI [/updateConfing] in DispatcherServlet with name 'dispatcherServlet'
+===2018-02-13 21:54:09.484 WARN  org.springframework.web.servlet.PageNotFound Line:215 - Request method 'POST' not supported
+===2018-02-13 21:55:16.420 WARN  org.springframework.web.servlet.PageNotFound Line:1176 - No mapping found for HTTP request with URI [/updateConfing] in DispatcherServlet with name 'dispatcherServlet'
+===2018-02-13 21:55:16.425 WARN  org.springframework.web.servlet.PageNotFound Line:215 - Request method 'POST' not supported

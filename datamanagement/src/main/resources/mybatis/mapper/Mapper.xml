@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.dao.Mapper" >
+    <resultMap id="userMapper" type="com.ncu.shiro.User">
+        <id column="jobNumber" property="jobNumber"/>
+        <collection property="roleList" column="jobNumber" select="findRole"/>
+    </resultMap>
+
+    <resultMap id="roleMapper" type="com.ncu.shiro.Role">
+        <id column="id" property="id"/>
+        <collection property="permissionList" column="roleId" select="findPermissionList"/>
+    </resultMap>
+
+    <select id="findById" resultMap="userMapper" parameterType="java.lang.String">
+        select * from t_teacher where jobNumber=#{jobNumber}
+    </select>
+
+    <select id="findRole" resultMap="roleMapper" parameterType="java.lang.String">
+        select r.id, r.roleId ,r.roleName from t_user_role u,t_role r WHERE u.jobNumber= #{jobNumber} and  u.roleId = r.roleId
+    </select>
+
+    <select id="selectRole" resultType="com.ncu.shiro.Role">
+        select  * from t_role
+    </select>
+    <select id="selectPermission" resultType="com.ncu.shiro.RoleToPermission">
+        select  * from t_permission
+    </select>
+    <select id="selectUserToRole" resultType="com.ncu.shiro.UserToRole">
+        select  * from t_user_role
+    </select>
+
+    <update id="updateRole" parameterType="com.ncu.shiro.Role">
+      update t_role
+        <set>
+            <if test="roleId != null">
+                roleId = #{roleId},
+            </if>
+            <if test="roleName != null">
+                roleName = #{roleName},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updatePermission" parameterType="com.ncu.shiro.RoleToPermission">
+        update t_permission
+        <set>
+            <if test="roleId != null">
+                roleId = #{roleId},
+            </if>
+            <if test="permissionName != null">
+                permissionName = #{permissionName},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateUserToRole" parameterType="com.ncu.shiro.UserToRole">
+        update t_user_role
+        <set>
+            <if test="userId != null">
+                jobNumber = #{userId},
+            </if>
+            <if test="roleId != null">
+                roleId = #{roleId},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteRole" parameterType="java.lang.Integer">
+        delete from t_role where id =#{id}
+    </delete>
+    <delete id="deletePermission" parameterType="java.lang.Integer">
+        delete from t_permission where id =#{id}
+    </delete>
+    <delete id="deleteUserToRole" parameterType="java.lang.Integer">
+        delete from t_user_role where id =#{id}
+    </delete>
+    <delete id="deleteUserToRoleByNum" parameterType="java.lang.String">
+        delete from t_user_role where jobNumber =#{id}
+    </delete>
+
+    <select id="findPermissionList" resultType="com.ncu.shiro.RoleToPermission" parameterType="java.lang.String">
+        select * from t_permission WHERE roleId = #{roleId}
+    </select>
+    
+    <insert id="insertRole" parameterType="com.ncu.shiro.Role">
+        insert into t_role(roleId,roleName) values(#{roleId},#{roleName})
+    </insert>
+
+    <insert id="insertPermission" parameterType="com.ncu.shiro.RoleToPermission">
+        insert into t_permission(roleId,permissionName) values(#{roleId},#{permissionName})
+    </insert>
+    <insert id="insertUserToRole" parameterType="com.ncu.shiro.UserToRole">
+        insert into t_user_role(jobNumber,roleId) values(#{userId},#{roleId})
+    </insert>
+
+    
+</mapper>

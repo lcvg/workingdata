@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50625
 File Encoding         : 65001
 
-Date: 2018-01-15 19:33:57
+Date: 2018-03-31 18:59:34
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,13 +21,10 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `t_authority`;
 CREATE TABLE `t_authority` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) DEFAULT NULL,
+  `name` varchar(32) NOT NULL,
+  `authorityCode` varchar(6) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_authority
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_awardrecords
@@ -39,12 +36,10 @@ CREATE TABLE `t_awardrecords` (
   `awardLevel` varchar(16) NOT NULL,
   `awardDate` date NOT NULL,
   `state` varchar(4) NOT NULL,
+  `jobNumber` varchar(10) NOT NULL,
+  `name` varchar(8) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_awardrecords
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for t_buildproject
@@ -58,12 +53,21 @@ CREATE TABLE `t_buildproject` (
   `teachingMethod` varchar(8) NOT NULL,
   `major` varchar(16) NOT NULL,
   `state` varchar(4) DEFAULT NULL,
+  `jobNumber` varchar(10) DEFAULT NULL,
+  `name` varchar(8) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of t_buildproject
+-- Table structure for t_config
 -- ----------------------------
+DROP TABLE IF EXISTS `t_config`;
+CREATE TABLE `t_config` (
+  `id` tinyint(4) NOT NULL,
+  `beginDate` datetime DEFAULT NULL,
+  `endDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=gbk;
 
 -- ----------------------------
 -- Table structure for t_data
@@ -71,18 +75,27 @@ CREATE TABLE `t_buildproject` (
 DROP TABLE IF EXISTS `t_data`;
 CREATE TABLE `t_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dataId` varchar(16) NOT NULL,
+  `dataId` varchar(64) NOT NULL,
   `dataType` varchar(2) NOT NULL,
   `owner` varchar(10) NOT NULL,
   `ownerName` varchar(8) NOT NULL,
-  `dataName` varchar(32) NOT NULL,
-  `dataPath` varchar(16) NOT NULL,
+  `dataName` varchar(228) NOT NULL,
+  `dataPath` varchar(228) NOT NULL,
+  `recordId` int(11) NOT NULL,
+  `uploadDate` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of t_data
+-- Table structure for t_department
 -- ----------------------------
+DROP TABLE IF EXISTS `t_department`;
+CREATE TABLE `t_department` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `depId` varchar(8) DEFAULT NULL,
+  `depName` varchar(16) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=gbk;
 
 -- ----------------------------
 -- Table structure for t_guiderecord
@@ -98,14 +111,10 @@ CREATE TABLE `t_guiderecord` (
   `studentClass` varchar(16) NOT NULL,
   `guideDate` date NOT NULL,
   `state` varchar(4) NOT NULL,
+  `jobNumber` varchar(10) NOT NULL,
+  `name` varchar(8) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_guiderecord
--- ----------------------------
-INSERT INTO `t_guiderecord` VALUES ('2', '蓝桥杯', '国家级', '小明', '8000114110', '本科生', '东软141', '2018-01-15', '1');
-INSERT INTO `t_guiderecord` VALUES ('4', '蓝桥杯', '国家级', '小明', '8000114110', '本科生', '东软141', '2018-01-15', '1');
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for t_log
@@ -116,13 +125,34 @@ CREATE TABLE `t_log` (
   `operator` varchar(10) NOT NULL,
   `operatorName` varchar(8) NOT NULL,
   `step` varchar(16) NOT NULL,
-  `opetationTime` datetime NOT NULL,
+  `operationTime` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=857 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of t_log
+-- Table structure for t_notice
 -- ----------------------------
+DROP TABLE IF EXISTS `t_notice`;
+CREATE TABLE `t_notice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(32) CHARACTER SET utf32 NOT NULL,
+  `content` mediumtext CHARACTER SET utf8 NOT NULL,
+  `department` text CHARACTER SET utf8 NOT NULL,
+  `createDate` datetime NOT NULL,
+  `state` varchar(1) CHARACTER SET utf8 DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=gbk;
+
+-- ----------------------------
+-- Table structure for t_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `t_permission`;
+CREATE TABLE `t_permission` (
+  `id` int(11) NOT NULL,
+  `roleId` varchar(6) NOT NULL,
+  `permissionName` varchar(16) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for t_projectassess
@@ -135,20 +165,29 @@ CREATE TABLE `t_projectassess` (
   `assessMode` varchar(8) NOT NULL,
   `assessDate` date NOT NULL,
   `state` varchar(4) NOT NULL,
+  `jobNumber` varchar(10) NOT NULL,
+  `name` varchar(8) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of t_projectassess
+-- Table structure for t_role
 -- ----------------------------
+DROP TABLE IF EXISTS `t_role`;
+CREATE TABLE `t_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `roleId` varchar(6) NOT NULL,
+  `roleName` varchar(16) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for t_teacher
 -- ----------------------------
 DROP TABLE IF EXISTS `t_teacher`;
 CREATE TABLE `t_teacher` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(8) NOT NULL,
+  `id` int(16) NOT NULL AUTO_INCREMENT,
+  `name` varchar(24) NOT NULL,
   `jobNumber` varchar(10) NOT NULL,
   `sex` varchar(1) NOT NULL,
   `department` varchar(8) NOT NULL,
@@ -156,21 +195,13 @@ CREATE TABLE `t_teacher` (
   `duty` varchar(16) NOT NULL,
   `phoneNumber` varchar(11) NOT NULL,
   `permission` varchar(6) NOT NULL,
+  `password` varchar(40) NOT NULL,
+  `buildProject` int(11) DEFAULT '0',
+  `records` int(11) DEFAULT '0',
+  `textBook` int(11) unsigned DEFAULT '0',
+  `teacherReform` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_teacher
--- ----------------------------
-INSERT INTO `t_teacher` VALUES ('1', '王浪', '03442', '男', '0331', '教授', '授课，实践研究', '13998732277', '高级');
-INSERT INTO `t_teacher` VALUES ('3', '王浪', '0', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
-INSERT INTO `t_teacher` VALUES ('6', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
-INSERT INTO `t_teacher` VALUES ('7', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
-INSERT INTO `t_teacher` VALUES ('10', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
-INSERT INTO `t_teacher` VALUES ('11', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
-INSERT INTO `t_teacher` VALUES ('12', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
-INSERT INTO `t_teacher` VALUES ('13', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
-INSERT INTO `t_teacher` VALUES ('14', '王浪', '03442', '男', '0331', '副教授', '授课，实践研究', '13998732277', '普通');
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for t_teachingreform
@@ -185,12 +216,10 @@ CREATE TABLE `t_teachingreform` (
   `compere` varchar(8) NOT NULL,
   `projectIntroduce` varchar(200) NOT NULL,
   `state` tinyint(4) NOT NULL,
+  `jobNumber` varchar(10) NOT NULL,
+  `name` varchar(8) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_teachingreform
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for t_textbook
@@ -200,15 +229,24 @@ CREATE TABLE `t_textbook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `textbook` varchar(16) NOT NULL,
   `type` varchar(16) NOT NULL,
-  `isbn` varchar(13) NOT NULL,
+  `isbn` varchar(24) NOT NULL,
   `press` varchar(32) NOT NULL,
   `publishDate` date NOT NULL,
   `compose` varchar(200) NOT NULL,
   `introduce` varchar(200) NOT NULL,
   `state` varchar(4) DEFAULT NULL,
+  `jobNumber` varchar(10) NOT NULL,
+  `name` varchar(8) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of t_textbook
+-- Table structure for t_user_role
 -- ----------------------------
+DROP TABLE IF EXISTS `t_user_role`;
+CREATE TABLE `t_user_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `jobNumber` varchar(24) NOT NULL,
+  `roleId` varchar(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;

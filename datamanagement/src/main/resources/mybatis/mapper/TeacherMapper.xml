@@ -1,28 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ncu.dao.TeacherDao" >
+    
+    <resultMap id="countMap" type="TeacherVO" >
+        <id column="jobNumber" property="jobNumber"/>
+        <collection property="records" column="jobNumber" select="getCount"/>
+        <collection property="buildProject" column="jobNumber" select="getCount2"/>
+        <collection property="textBook" column="jobNumber" select="getCount3"/>
+        <collection property="teacherReform" column="jobNumber" select="getCount4"/>
+    </resultMap>
+    
+    <select id="getCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(jobNumber) from t_awardrecords WHERE jobNumber=#{jobNumber}
+    </select>
+    <select id="getCount2" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(jobNumber) from t_buildproject WHERE jobNumber=#{jobNumber}
+    </select>
+    <select id="getCount3" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(jobNumber) from t_textbook WHERE jobNumber=#{jobNumber}
+    </select>
+    <select id="getCount4" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(jobNumber) from t_teachingreform WHERE jobNumber=#{jobNumber}
+    </select>
 
     <sql id="baseColumns">
         id, name, jobNumber,sex, department, professionalTitle,duty, phoneNumber,permission
     </sql>
 
+    <sql id="condition">
+        <if test="id != null">
+            id = #{id}
+        </if>
+        <if test="teacherName != null">
+            and <![CDATA[ LOCATE(#{teacherName},name)>0 ]]>
+        </if>
+        <if test="jobNumber != null">
+            and jobNumber = #{jobNumber}
+        </if>
+        <if test="permission != null">
+            permission = #{permission}
+        </if>
+
+
+
+    </sql>
+
     <insert id="addTeacherByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
-        insert into t_teacher (name, jobNumber,sex, department, professionalTitle,duty, phoneNumber,permission)
+        insert into t_teacher (name, jobNumber,sex, department, professionalTitle,duty, phoneNumber,permission,password)
         values
         <foreach collection="list" item="item" index="index" separator="," >
             (#{item.name,jdbcType=VARCHAR}, #{item.jobNumber,jdbcType=VARCHAR},
             #{item.sex,jdbcType=VARCHAR}, #{item.department,jdbcType=VARCHAR}, #{item.professionalTitle,jdbcType=VARCHAR},
-            #{item.duty,jdbcType=VARCHAR}, #{item.phoneNumber,jdbcType=VARCHAR}, #{item.permission,jdbcType=VARCHAR})
+            #{item.duty,jdbcType=VARCHAR}, #{item.phoneNumber,jdbcType=VARCHAR}, #{item.permission,jdbcType=VARCHAR},#{item.password})
         </foreach>
-
-
-
     </insert>
     <insert id="addTeacher" useGeneratedKeys="true" keyProperty="id" parameterType="Teacher">
-        insert into t_teacher (name, jobNumber,sex, department, professionalTitle,duty, phoneNumber,permission)
+        insert into t_teacher (name, jobNumber,sex, department, professionalTitle,duty, phoneNumber,permission,password)
         values ( #{name,jdbcType=VARCHAR}, #{jobNumber,jdbcType=VARCHAR},
         #{sex,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{professionalTitle,jdbcType=VARCHAR},
-        #{duty,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR})
+        #{duty,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR},#{password})
     </insert>
 
     <update id="updateTeacher" parameterType="Teacher">
@@ -31,7 +67,7 @@
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
             </if>
-            <if test="jobNumber != null">
+            <if test="jobNumber != null and jobNumber !=''">
                 jobNumber = #{jobNumber,jdbcType=VARCHAR},
             </if>
             <if test="sex != null">
@@ -52,21 +88,151 @@
             <if test="permission != null">
                 permission = #{permission,jdbcType=VARCHAR},
             </if>
+            <if test="password != null">
+                password = #{password}
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="getTeacher" resultType="Teacher">
-        select  <include refid="baseColumns"></include> from t_teacher
-        <if test="id !=0">
-            where id = ${id}
-        </if>
+    <update id="incRecord" parameterType="java.lang.String">
+        update t_teacher
+        <set>
+            <if test="type == '1'.toString()">
+                buildProject = buildProject+1,
+            </if>
+            <if test="type == '6'.toString()">
+                records = records+1,
+            </if>
+            <if test="type == '5'.toString()">
+                textBook = textBook+1,
+            </if>
+            <if test="type == '4'.toString()">
+                teacherReform = teacherReform+1,
+            </if>
+
+        </set>
+        where jobNumber = #{jobNumber}
+    </update>
+
+    <update id="decRecord" parameterType="java.lang.String">
+        update t_teacher
+        <set>
+            <if test="type == '1'.toString()">
+                buildProject = buildProject-1,
+            </if>
+            <if test="type == '6'.toString()">
+                records = records-1,
+            </if>
+            <if test="type == '5'.toString()">
+                textBook = textBook-1,
+            </if>
+            <if test="type == '4'.toString()">
+                teacherReform = teacherReform-1,
+            </if>
+
+        </set>
+        where jobNumber = #{jobNumber}
+    </update>
+
+    <select id="getTeacher" resultType="TeacherVO" parameterType="TeacherQuery">
+        select t.id, name, t.jobNumber,sex, department, professionalTitle,duty, phoneNumber,u.roleId as permission from t_teacher t left join t_user_role u  on t.jobNumber = u.jobNumber
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="teacherName != null">
+                and <![CDATA[ LOCATE(#{teacherName},name)>0 ]]>
+            </if>
+            <if test="jobNumber != null">
+                and t.jobNumber = #{jobNumber}
+            </if>
+            <if test="permission != null">
+                permission = #{permission}
+            </if>
+
+       </where>
+        <trim prefix="ORDER BY" prefixOverrides=",">
+            <if test="awardRecordSort=='true'.toString()">
+                ,records desc
+            </if>
+            <if test="teacherRefromSort=='true'.toString()">
+                ,teacherReform desc
+            </if>
+            <if test="buildProjectSort=='true'.toString()">
+                ,buildProject desc
+            </if>
+            <if test="textBookSort=='true'.toString()">
+                ,textBook desc
+            </if>
+            <if test="textBookSort=='true' or awardRecordSort=='true' or teacherRefromSort=='true' or buildProjectSort=='true'.toString()">
+                ,id desc
+            </if>
+
+        </trim>
+
     </select>
-    
+    <select id="getTeacherAndCount" resultMap="countMap" parameterType="TeacherQuery">
+        select  <include refid="baseColumns"/> from t_teacher
+        <where>
+            <include refid="condition"/>
+        </where>
+    </select>
+
+    <select id="getSize" resultType="java.lang.Integer" parameterType="TeacherQuery">
+        select count(1) from t_teacher
+        <where>
+            <include refid="condition"/>
+
+        </where>
+    </select>
+
+
+
+    <select id="getTeacherByAward" resultType="TeacherVO" parameterType="TeacherQuery">
+        SELECT  t.id, t.name, t.jobNumber,sex, department, professionalTitle,duty, phoneNumber,permission
+
+        <if test="'0'.toString()!=sortType">
+            , count(t.jobNumber) records
+        </if>
+        <if test="'6'.toString()==sortType">
+            from t_teacher t,t_awardrecords a
+        </if>
+        <if test="sortType == '4'.toString()">
+            from t_teacher t,t_teachingreform a
+        </if>
+        <if test="sortType == '1'.toString()">
+            from t_teacher t,t_buildproject a
+        </if>
+        <if test="sortType == '5'.toString()">
+            from t_teacher t,t_textbook a
+        </if>
+        <if test="sortType == '0'.toString()">
+            from t_teacher t
+        </if>
+        <where>
+            <include refid="condition"/>
+            <if test="sortType != '0'.toString()">
+                and t.jobNumber = a.jobNumber GROUP BY a.jobNumber ORDER BY count(a.jobNumber),t.id DESC
+            </if>
+
+        </where>
+    </select>
+
+
+
+
     <delete id="deleteTeacherByBatch" parameterType="java.util.List">
         delete from t_teacher where id in
         <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+    <select id="findSize" resultType="java.util.Map">
+        select jobNumber,name, count(1) number FROM ${table} GROUP BY jobNumber
+        <!--<if test="group != null">-->
+            <!--GROUP BY jobNumber-->
+        <!--</if>-->
+    </select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.ncu.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.swing.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -9,35 +11,54 @@ import java.util.Date;
  * ClassName: ProjectAssess
  *
  * @Author:12909
- * @Description: 教改课题
+ * @Description: 课程考核
  * @Date:Created in 14:28 2018/1/15
  * @Modified By:
  */
-public class ProjectAssess implements Serializable {
+public class ProjectAssess extends Attachment implements Serializable {
     /**
      * 编号
      */
     private Integer id;
     /**
-     * 课题名称
+     * 课程名称
      */
     private String projectName;
     /**
-     * 课题编号
+     * 课程编号
      */
     private String projectId;
     /**
-     * 课题类别
+     * 课程类别
      */
     private String assessMode;
     /**
-     * 申报时间
+     * 考核时间
      */
+    @JSONField(format="yyyy-MM-dd HH:mm")
     private Date assessDate;
     /**
      * 审核状态
      */
     private String state;
+    private String jobNumber;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getJobNumber() {
+        return jobNumber;
+    }
+
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
+    }
 
     public Integer getId() {
         return id;

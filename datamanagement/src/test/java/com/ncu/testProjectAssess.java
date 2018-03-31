@@ -91,13 +91,13 @@ public class testProjectAssess {
         projectAssessDao.checkByBatch(list);
     }
 
-    @Test
-    public void get(){
-
-        log.debug("wodedeubg");
-        log.info("ddfdff"+projectAssessDao.getProjectAssess(1)+"");
-        log.info("ddfdff"+projectAssessDao.getProjectAssess(0)+"");
-    }
+//    @Test
+//    public void get(){
+//
+//        log.debug("wodedeubg");
+//        log.info("ddfdff"+projectAssessDao.getProjectAssess(1)+"");
+//        log.info("ddfdff"+projectAssessDao.getProjectAssess(0)+"");
+//    }
     @Test
     public void delete(){
         List<Integer> list = new ArrayList<>();

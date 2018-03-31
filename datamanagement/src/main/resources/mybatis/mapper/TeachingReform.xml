@@ -1,26 +1,66 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ncu.dao.TeachingReformDao" >
-
+    <resultMap id="findMap" type="TeachingReform">
+        <id column="id" property="id"/>
+        <collection property="listData" column="id" select="findAttachment"/>
+    </resultMap>
+    <select id="findAttachment" parameterType="java.lang.Integer" resultType="Data">
+        SELECT * from t_data WHERE dataType = "4" and recordId = #{id}
+    </select>
     <sql id="baseColumns">
-        id, projectName, projectId,projectType, reportTime,compere, projectIntroduce, state
+       id, projectName, projectId,projectType, reportTime,compere, projectIntroduce, state,jobNumber,name
+    </sql>
+    <sql id="selectCondition">
+        <if test=" id != null">
+            id = #{id}
+        </if>
+        <if test="timeQuantum == 1">
+            and <![CDATA[ reportTime<endDate AND reportTime>beginDate ]]>
+        </if>
+        <if test="endDate != null">
+            and <![CDATA[reportTime < #{endDate}]]>
+        </if>
+        <if test="beginDate != null">
+            and <![CDATA[reportTime > #{beginDate}]]>
+        </if>
+        <if test="jobNumber != null and jobNumber !=''">
+            and jobNumber = #{jobNumber}
+        </if>
+
+
+        <if test="nameCondition != null">
+            and <![CDATA[ LOCATE(#{nameCondition},projectName)]]>
+        </if>
+        <if test="idCondition != null">
+            and <![CDATA[ LOCATE(#{idCondition},projectId)]]>
+        </if>
+        <if test="majorCondition != null">
+            and <![CDATA[ LOCATE(#{majorCondition},projectType)]]>
+        </if>
+        <if test="state != null and state!= ''">
+            and state = #{state}
+        </if>
+        <if test="name != null ">
+            and <![CDATA[ LOCATE(#{name},name)]]>
+        </if>
     </sql>
 
     <insert id="addTeachingReformByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
-        insert into t_teachingreform (projectName, projectId,projectType, reportTime,compere, projectIntroduce, state)
+        insert into t_teachingreform (projectName, projectId,projectType, reportTime,compere, projectIntroduce, state,jobNumber,name)
         values
         <foreach collection="list" item="item" index="index" separator="," >
             ( #{item.projectName,jdbcType=VARCHAR}, #{item.projectId,jdbcType=VARCHAR},
             #{item.projectType,jdbcType=VARCHAR}, #{item.reportTime,jdbcType=DATE},  #{item.compere,jdbcType=VARCHAR},
-            #{item.projectIntroduce,jdbcType=VARCHAR},#{item.state,jdbcType=VARCHAR})
+            #{item.projectIntroduce,jdbcType=VARCHAR},#{item.state,jdbcType=VARCHAR},#{item.jobNumber},#{item.name})
         </foreach>
     </insert>
 
     <insert id="addTeachingReform" useGeneratedKeys="true" keyProperty="id" parameterType="TeachingReform">
-         insert into t_teachingreform (projectName, projectId,projectType, reportTime,compere, projectIntroduce, state)
+         insert into t_teachingreform (projectName, projectId,projectType, reportTime,compere, projectIntroduce, state,jobNumber,name)
         values   ( #{projectName,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR},
             #{projectType,jdbcType=VARCHAR}, #{reportTime,jdbcType=DATE},  #{compere,jdbcType=VARCHAR},
-            #{projectIntroduce,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR})
+            #{projectIntroduce,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR},#{jobNumber},#{name})
     </insert>
 
     <update id="updateTeachingReform" parameterType="TeachingReform">
@@ -47,16 +87,30 @@
             <if test="state != null">
                 state = #{state,jdbcType=VARCHAR},
             </if>
+            <if test="jobNumber != null">
+                jobNumber = #{jobNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
 
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="getTeachingReform" resultType="TeachingReform">
-        select  <include refid="baseColumns"></include> from t_teachingreform
-        <if test="id !=0">
-            where id = ${id}
-        </if>
+    <select id="getTeachingReform" resultMap="findMap" parameterType="Query">
+        select  <include refid="baseColumns"/> from t_teachingreform
+       <where>
+           <include refid="selectCondition"/>
+
+       </where>
+
+    </select>
+    <select id="getSize" resultType="java.lang.Integer" parameterType="Query">
+        select  count(1) from t_teachingreform
+        <where>
+            <include refid="selectCondition"/>
+        </where>
     </select>
     
     <delete id="deleteTeachingReformByBatch" parameterType="java.util.List">

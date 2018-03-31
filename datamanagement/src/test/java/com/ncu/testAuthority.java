@@ -1,9 +1,7 @@
 package com.ncu;
 
-import com.ncu.dao.AuthorityDao;
-import com.ncu.dao.DataDao;
+import com.ncu.dao.FixedDao;
 import com.ncu.model.Authority;
-import com.ncu.model.Data;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -11,10 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by 黄重杨 on 2018/1/12.
@@ -29,7 +23,7 @@ import java.util.List;
 @SpringBootTest
 public class testAuthority {
     @Autowired
-    private AuthorityDao authorityDao;
+    private FixedDao fixedDao;
 
     private static final Logger log = LoggerFactory.getLogger(testAuthority.class);
 
@@ -39,7 +33,7 @@ public class testAuthority {
         authority.setName("管理员");
         authority.setAuthorityCode("01");
 
-         log.info("add = " + authorityDao.addAuthority(authority));
+         log.info("add = " + fixedDao.addAuthority(authority));
 
 
     }
@@ -51,7 +45,7 @@ public class testAuthority {
         authority.setName("管理员");
         authority.setAuthorityCode("02");
 
-        log.info("add = " + authorityDao.updateAuthority(authority));
+        log.info("add = " + fixedDao.updateAuthority(authority));
 
 
     }
@@ -63,12 +57,12 @@ public class testAuthority {
     public void get(){
 
         log.debug("wodedeubg");
-        log.info("ddfdff"+authorityDao.getAuthority(1)+"");
-        log.info("ddfdff"+authorityDao.getAuthority(0)+"");
+        log.info("ddfdff"+ fixedDao.getAuthority(1)+"");
+        log.info("ddfdff"+ fixedDao.getAuthority(0)+"");
     }
     @Test
     public void delete(){
 
-        authorityDao.deleteAuthority(1);
+        fixedDao.deleteAuthority(1);
     }
 }

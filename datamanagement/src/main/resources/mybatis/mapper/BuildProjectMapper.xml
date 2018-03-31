@@ -2,21 +2,59 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ncu.dao.BuildProjectDao" >
 
+    <resultMap id="findMap" type="BuildProject">
+        <id column="id" property="id"/>
+        <collection property="listData" column="id" select="findAttachment"/>
+    </resultMap>
+
     <sql id="baseColumns">
-        id, projectId, projectName,buildDate, teachingMethod, major,state
+        id, projectId, projectName,buildDate, teachingMethod, major,state,jobNumber,name
+    </sql>
+
+    <sql id="selectCondition">
+        <if test=" id != null">
+            id = #{id}
+        </if>
+        <if test="timeQuantum == 1">
+            and <![CDATA[ buildDate<endDate AND buildDate>beginDate ]]>
+        </if>
+        <if test="jobNumber != null">
+            and jobNumber = #{jobNumber}
+        </if>
+        <if test="condition != null">
+            and <![CDATA[ LOCATE(#{condition},projectName)]]>
+        </if>
+        <if test="nameCondition != null">
+            and <![CDATA[ LOCATE(#{nameCondition},projectName)]]>
+        </if>
+        <if test="idCondition != null">
+            and <![CDATA[ LOCATE(#{idCondition},projectId)]]>
+        </if>
+        <if test="majorCondition != null">
+            and <![CDATA[ LOCATE(#{majorCondition},major)]]>
+        </if>
+        <if test="state != null and state != ''">
+            and state = #{state}
+        </if>
+        <if test="projectId != null">
+            and projectId = #{projectId}
+        </if>
+        <if test="name != null ">
+            and <![CDATA[ LOCATE(#{name},name)]]>
+        </if>
     </sql>
 
     <insert id="addBuildProject" useGeneratedKeys="true" keyProperty="id" parameterType="BuildProject">
-        insert into t_buildproject (projectId, projectName,buildDate, teachingMethod, major,state)
-        values (#{projectId,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR},#{buildDate,jdbcType=DATE}, #{teachingMethod,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR} ,#{state,jdbcType=VARCHAR})
+        insert into t_buildproject (projectId, projectName,buildDate, teachingMethod, major,state,jobNumber,name)
+        values (#{projectId,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR},#{buildDate,jdbcType=DATE}, #{teachingMethod,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR} ,#{state,jdbcType=VARCHAR},#{jobNumber},#{name})
     </insert>
 
     <insert id="addBuildProjectByBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
-        insert into t_buildproject (projectId, projectName,buildDate, teachingMethod, major,state)
+        insert into t_buildproject (projectId, projectName,buildDate, teachingMethod, major,state,jobNumber,name)
         values
         <foreach collection="list" index="index" item="item" separator=",">
             (#{item.projectId,jdbcType=VARCHAR}, #{item.projectName,jdbcType=VARCHAR},
-            #{item.buildDate,jdbcType=DATE}, #{item.teachingMethod,jdbcType=VARCHAR}, #{item.major,jdbcType=VARCHAR} ,#{item.state,jdbcType=VARCHAR})
+            #{item.buildDate,jdbcType=DATE}, #{item.teachingMethod,jdbcType=VARCHAR}, #{item.major,jdbcType=VARCHAR} ,#{item.state,jdbcType=VARCHAR},#{item.jobNumber},#{item.name})
         </foreach>
 
     </insert>
@@ -30,8 +68,11 @@
             <if test="projectName != null">
                 projectName = #{projectName,jdbcType=VARCHAR},
             </if>
-            <if test="buildDate != null">
-                buildDate = #{buildDate,jdbcType=DATE},
+            <if test="endDate != null">
+                and <![CDATA[ buildDate <#{endDate}]]>
+            </if>
+            <if test="beginDate != null">
+                and <![CDATA[ buildDate >#{beginDate}]]>
             </if>
             <if test="teachingMethod != null">
                 teachingMethod = #{teachingMethod,jdbcType=VARCHAR},
@@ -41,6 +82,12 @@
             </if>
             <if test="state != null">
                 state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="jobNumber != null and jobNumber !=''">
+                jobNumber = #{jobNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -52,11 +99,28 @@
         </foreach>
     </update>
 
-    <select id="getBuildProject" resultType="BuildProject">
-        select  <include refid="baseColumns"></include> from t_buildproject
-        <if test="id !=0">
-            where id = ${id}
-        </if>
+    <update id="checkNoByBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update t_buildproject set state = 2 WHERE id = #{item}
+        </foreach>
+    </update>
+
+    <select id="getBuildProject" resultMap="findMap" parameterType="Query">
+        select  <include refid="baseColumns"/> from t_buildproject
+        <where>
+            <include refid="selectCondition"/>
+        </where>
+        ORDER BY buildDate DESC
+    </select>
+    <select id="getSize" resultType="java.lang.Integer" parameterType="Query">
+        select count(1) from t_buildproject
+        <where>
+            <include refid="selectCondition"/>
+        </where>
+
+    </select>
+    <select id="findAttachment" parameterType="java.lang.Integer" resultType="Data">
+        SELECT * from t_data WHERE dataType = "1" and recordId = #{id}
     </select>
     
     <delete id="deleteBuildProjectByBatch" parameterType="java.util.List">

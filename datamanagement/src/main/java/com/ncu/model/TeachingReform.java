@@ -1,12 +1,14 @@
 package com.ncu.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by 1290995884@qq.com on 2018/1/16.
  */
-public class TeachingReform implements Serializable {
+public class TeachingReform extends Attachment implements Serializable {
     /**
      * 编号
      */
@@ -26,6 +28,7 @@ public class TeachingReform implements Serializable {
     /**
      * 申报时间
      */
+    @JSONField(format="yyyy-MM-dd HH:mm")
     private Date reportTime;
     /**
      * 主持人
@@ -39,6 +42,24 @@ public class TeachingReform implements Serializable {
      * 审核状态
      */
     private String state;
+    private String jobNumber;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getJobNumber() {
+        return jobNumber;
+    }
+
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
+    }
 
     public Integer getId() {
         return id;

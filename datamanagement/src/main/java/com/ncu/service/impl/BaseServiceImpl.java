@@ -782,10 +782,12 @@ public class BaseServiceImpl implements BaseService {
     public Map<String, Object> addDepartment(Department department) {
         Map<String , Object> map = new HashMap<>();
         try {
-            if (department.getId()!= null){
+            if (department.getId()!= null ||"".equals(department.getId())){
                 fixedDao.updateDepartment(department);
+            }else {
+                fixedDao.addDepartment(department);
             }
-            fixedDao.addDepartment(department);
+
         } catch (Exception e) {
             e.printStackTrace();
             map.put("code",1893);

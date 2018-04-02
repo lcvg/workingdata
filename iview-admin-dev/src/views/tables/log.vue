@@ -19,7 +19,7 @@
             </Input>
              
             开始时间：<DatePicker  type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" style="width: 140px" v-model="beginDate"   ></DatePicker>
-            结束时间：<DatePicker  type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm" style="width: 140px"  v-model="endDate" ></DatePicker></Col>
+            结束时间：<DatePicker  type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm" style="width: 140px"  v-model="endDate" ></DatePicker>
              <i-button type="default" icon="ios-search"   @click="search">搜索</i-button>
             
             <i-button type="default" icon="ios-trash-outline" class="log-remove"  @click="remove">批量删除</i-button>

@@ -188,6 +188,18 @@ export const appRouter = [
             { path: 'attachment', title: '出版教材', name: 'attachment-table', icon: 'android-attach',  component: resolve => { require(['@/views/tables/attachment.vue'], resolve); }}
         ]
     },
+    {
+        path: '/',
+        icon: 'android-attach',
+        title: "设置",
+        name: 'config',
+        component: Main,
+        
+        children: [
+            { path: 'config', title: '设置', name: 'config-table', icon: 'android-attach',  component: resolve => { require(['@/views/tables/config.vue'], resolve); }},
+            { path: 'department', title: '部门管理', name: 'department-table', icon: 'android-attach',  component: resolve => { require(['@/views/tables/department.vue'], resolve); }}
+        ]
+    },
     // {
     //     path: '/',
     //     icon: 'earth',

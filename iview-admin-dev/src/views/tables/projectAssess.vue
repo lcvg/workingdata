@@ -8,6 +8,10 @@
 
 <template>  
     <div>
+        <Alert show-icon closable v-if="!kj">
+        信息提示
+        <template slot="desc">1.本页面是课程考核页面，可录入记录、编辑、删除和查看信息。<br>2.开始时间：{{item.beginDate}}，结束时间：{{item.endDate}} </template>
+        </Alert>
         <Row class="margin-top-10 margin-bottom-10" >
             <span v-if="this.InfojobNumber=='-1'">
                 <Input v-model="identify"  placeholder="请输入关键字" class="identify">
@@ -31,7 +35,7 @@
                 </Select>
                 <Button slot="append" @click="search" icon="ios-search" type="primary" style="outline: none"></Button>
             </Input>
-            <i-button type="default" class="remove"  icon="ios-trash-outline" @click="remove">批量删除</i-button>
+            <i-button type="default" class="remove" v-if="kjMod" icon="ios-trash-outline" @click="remove">批量删除</i-button>
             <i-button type="default" class="check" v-if="kj"  icon="ios-checkmark-outline" @click="checkSuccess(0)">审核通过</i-button>
             <i-button type="default" class="check" v-if="kj" icon="ios-minus-outline" @click="checkSuccess(1)">审核不通过</i-button>
         
@@ -157,6 +161,7 @@ export default {
             check:"",
             kjMod:true,
             level:"",
+            item:{},
             condition:"",
             removeIds:[],
             jobNumber:"",
@@ -410,7 +415,23 @@ export default {
                         
                     })
 
-        }
+        },
+         getConfig(){
+                let vm = this;
+                this.$axios.get('/findConfig',{params:{id:3}})
+                    .then(function (response) {
+                        vm.item =response.data.list[0];
+                      
+                         if(new Date()>new Date(vm.item.beginDate) && new Date()<new Date(vm.item.endDate) ){
+                             localStorage.setItem("projectAssess",0);
+                        }else{
+                            localStorage.setItem("projectAssess",1);
+                        }
+                     
+                })
+                .catch((err) => {   
+                });
+            }
 
        
     },
@@ -420,6 +441,7 @@ export default {
         if(this.vis=='false'){
             this.kj = true;
         }
+        this.getConfig()
         this.showMod()
     }
 

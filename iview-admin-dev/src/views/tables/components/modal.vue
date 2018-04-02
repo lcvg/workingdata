@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <Button type="default" icon="plus" @click="show(1,1,0)" class="addbtn" v-if="kj">添加教改课题</Button>
+        <Button type="default" icon="plus" @click="show(1,1,0)" class="addbtn" v-if="kj">添加建设课题</Button>
             <Modal
                 v-model="modal1"
                 title="添加建设课程信息"

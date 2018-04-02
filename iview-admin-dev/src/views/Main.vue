@@ -258,7 +258,7 @@
         },
         mounted () {
             this.init();
-            this.getConfig()
+            // this.getConfig()
         },
         created () {
             // 显示打开的页面的列表

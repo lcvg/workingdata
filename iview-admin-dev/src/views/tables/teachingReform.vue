@@ -8,7 +8,10 @@
 
 <template>  
     <div>
-         
+        <Alert show-icon closable v-if="!kj">
+        信息提示
+        <template slot="desc">1.本页面是教改课题页面，可录入记录、编辑、删除和查看信息。<br>2.开始时间：{{item.beginDate}}，结束时间：{{item.endDate}} </template>
+        </Alert>
         <Row class="margin-top-10 margin-bottom-10" >
 
             
@@ -45,7 +48,7 @@
 
  
 
-         <i-button type="default" class="remove"  icon="ios-trash-outline" @click="remove">批量删除</i-button>
+         <i-button type="default" class="remove" v-if="kjMod"  icon="ios-trash-outline" @click="remove">批量删除</i-button>
             <i-button type="default" class="check" v-if="kj"  icon="ios-checkmark-outline" @click="checkSuccess(0)">审核通过</i-button>
             <i-button type="default" class="check" v-if="kj" icon="ios-minus-outline" @click="checkSuccess(1)">审核不通过</i-button>
        
@@ -171,6 +174,7 @@ export default {
             identify:"",
             kj:false,
             check:"",
+            item:{},
             condition:"",
             removeIds:[],
             ajaxHistoryData:[],
@@ -442,7 +446,23 @@ export default {
                     .catch(function (response) {
                     })
 
-        }
+        },
+        getConfig(){
+                let vm = this;
+                this.$axios.get('/findConfig',{params:{id:4}})
+                    .then(function (response) {
+                        vm.item =response.data.list[0];
+                      
+                         if(new Date()>new Date(vm.item.beginDate) && new Date()<new Date(vm.item.endDate) ){
+                             localStorage.setItem("teachingReform",0);
+                        }else{
+                            localStorage.setItem("teachingReform",1);
+                        }
+                     
+                })
+                .catch((err) => {   
+                });
+            }
 
        
     },
@@ -450,6 +470,7 @@ export default {
         if(this.vis=='false'){
             this.kj = true; 
         }
+        this.getConfig()
          this.showMod()
          
     },

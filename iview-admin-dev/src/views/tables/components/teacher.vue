@@ -52,17 +52,12 @@
                     </div>
     
                     <div class="line">
-    
                         <label>职称</label>
                         <Input class="input" v-model="professionalTitle" ></Input>
-                       
-    
                     </div>
     
                     <div class="line">
-    
                         <label>职务</label>
-    
                         <Input class="input" v-model="duty" ></Input>
     
                     </div>

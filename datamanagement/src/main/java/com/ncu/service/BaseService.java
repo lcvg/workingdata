@@ -78,6 +78,8 @@ public interface BaseService {
     Map<String ,Object> removePermission(int id);
     Map<String ,Object> removeUserToRole(int id);
 
+    Map<String ,Object> updateAttach(Data data);
+
 
 
 }

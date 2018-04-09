@@ -54,3 +54,6 @@ pagehelper:
     params: count=countSql
 #    dialect: com.github.pagehelper.dialect.helper.MySqlDialect
 
+
+attachmentUrl: C:\project\dingding\工作资料管理\workingdata-master\datamanagement\target\classes\static\attachment\
+

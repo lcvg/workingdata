@@ -158,7 +158,7 @@ export default {
     data () {
         return {
             sel:"",
-            kjMod:true,
+            kjMod:false,
             check:"",
             kj:"",
             condition:"",
@@ -278,6 +278,8 @@ export default {
                 this.kjMod = false
             }else if(localStorage.textBook==1){
                 this.kjMod = false
+            }else{
+                this.kjMod = true
             }
         },
         getData () {
@@ -425,6 +427,7 @@ export default {
                         }else{
                             localStorage.setItem("textBook",1);
                         }
+                         vm.showMod()
                      
                 })
                 .catch((err) => {   
@@ -440,7 +443,6 @@ export default {
             this.kj = true;
         }
         this.getConfig()
-       this.showMod()
     }
 
 };

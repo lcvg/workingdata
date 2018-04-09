@@ -1,27 +1,33 @@
 package com.ncu.service.impl;
 
+import com.alibaba.druid.support.logging.*;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.ncu.dao.*;
 import com.ncu.env.TypeEnum;
 import com.ncu.model.*;
+import com.ncu.model.Log;
 import com.ncu.service.BaseService;
 
 import com.ncu.service.TeacherService;
 import com.ncu.shiro.Role;
 import com.ncu.shiro.RoleToPermission;
 import com.ncu.shiro.UserToRole;
+import com.ncu.websocket.WebSocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.*;
 
 import static com.ncu.env.TypeEnum.*;
 
 @Service
 public class BaseServiceImpl implements BaseService {
+
+
     @Autowired
     AwardRecordsDao awardRecordsDao;
     @Autowired
@@ -52,11 +58,13 @@ public class BaseServiceImpl implements BaseService {
     TeacherService teacher;
 
 
+
     @Override
     @Transactional
     public Map<String,Object> addAwardRecordsByBatch(List<AwardRecords> awardRecordsList) {
-        String owner = "123";
-        String ownerName = "hcy";
+        String owner = getTeacher(session).getJobNumber();
+        String ownerName = getTeacher(session).getName();
+        System.out.println(session.getId());
         Map<String,Object> map = new HashMap<>();
         List<Data> dataList = new ArrayList<>();
         try {
@@ -76,6 +84,7 @@ public class BaseServiceImpl implements BaseService {
                         dataDao.addDataByBatch(dataList);
                     }
                     teacher.incRecord(AWARDRECORDS.getIndex()+"",getTeacher(session).getJobNumber());
+                    saveLog("添加获奖记录",ownerName,owner);
                 }
 
             }else{
@@ -94,6 +103,7 @@ public class BaseServiceImpl implements BaseService {
                     dataDao.addDataByBatch(dataList);
                 }
                 awardRecordsDao.updateAwardRecords(awardRecords);
+                saveLog("修改获奖记录",ownerName,owner);
 
             }
 
@@ -155,6 +165,7 @@ public class BaseServiceImpl implements BaseService {
                 default:
                     break;
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -286,10 +297,12 @@ public class BaseServiceImpl implements BaseService {
 
     @Override
     public Map<String,Object> addConfig(Config config ,int type) {
+
         Map<String , Object> map = new HashMap<>();
         if (type==1){
             try {
                 configDao.addConfig(config);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 map.put("code",1891);
@@ -299,6 +312,7 @@ public class BaseServiceImpl implements BaseService {
         }else {
             try {
                 configDao.updateConfig(config);
+
             } catch (Exception e) {
                 map.put("code",1892);
                 map.put("msg","update error");
@@ -313,9 +327,12 @@ public class BaseServiceImpl implements BaseService {
 
     @Override
     public Map<String,Object> updateConfigByBatch(List<Config> configList) {
+        String owner = getTeacher(session).getJobNumber();
+        String ownerName = getTeacher(session).getName();
         Map<String ,Object> map = new HashMap<>();
         try {
             configDao.updateConfigByBatch(configList);
+            saveLog("修改有效时间",ownerName,owner);
         } catch (Exception e) {
             e.printStackTrace();
             map.put("code",1891);
@@ -388,6 +405,7 @@ public class BaseServiceImpl implements BaseService {
                         dataDao.addDataByBatch(dataList);
                     }
 //                    teacher.incRecord(GUIDERECORD.getIndex()+"");
+                    saveLog("添加指导记录",ownerName,owner);
                 }
 
             }else{
@@ -406,6 +424,7 @@ public class BaseServiceImpl implements BaseService {
                     dataDao.addDataByBatch(dataList);
                 }
                 guideRecordDao.updateGuideRecord(guideRecord);
+                saveLog("修改指导记录",ownerName,owner);
 
             }
 
@@ -480,8 +499,7 @@ public class BaseServiceImpl implements BaseService {
                 if (dataList.size()>0){
                     dataDao.addDataByBatch(dataList);
                 }
-
-
+                WebSocketServer.sendInfo("true");
             } catch (Exception e) {
                 e.printStackTrace();
                 map.put("code",1891);
@@ -504,6 +522,7 @@ public class BaseServiceImpl implements BaseService {
                 if (dataList.size()>0){
                     dataDao.addDataByBatch(dataList);
                 }
+                saveLog("发布公告",ownerName,owner);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -542,6 +561,7 @@ public class BaseServiceImpl implements BaseService {
                         dataDao.addDataByBatch(dataList);
                     }
 //                    teacher.incRecord(PROJECTASSESS.getIndex()+"");
+                    saveLog("添加课程考核方式",ownerName,owner);
                 }
             }else{
                 ProjectAssess projectAssess = projectAssesses.get(0);
@@ -559,6 +579,7 @@ public class BaseServiceImpl implements BaseService {
                     dataDao.addDataByBatch(dataList);
                 }
                 projectAssessDao.updateProjectAssess(projectAssess);
+                saveLog("修改课程考核方式",ownerName,owner);
             }
 
         } catch (Exception e) {
@@ -599,6 +620,7 @@ public class BaseServiceImpl implements BaseService {
                         dataDao.addDataByBatch(dataList);
                     }
                     teacher.incRecord(TEACHERREFORM.getIndex()+"",getTeacher(session).getJobNumber());
+                    saveLog("添加教改课题",ownerName,owner);
                 }
             }else{
                 TeachingReform teachingReform =teachingReforms.get(0);
@@ -616,6 +638,7 @@ public class BaseServiceImpl implements BaseService {
                     dataDao.addDataByBatch(dataList);
                 }
                 teachingReformDao.updateTeachingReform(teachingReform);
+                saveLog("修改教改课题",ownerName,owner);
 
             }
 
@@ -657,6 +680,7 @@ public class BaseServiceImpl implements BaseService {
                         dataDao.addDataByBatch(dataList);
                     }
                     teacher.incRecord(TEXTBOOK.getIndex()+"",getTeacher(session).getJobNumber());
+                    saveLog("添加出版教材",ownerName,owner);
                 }
             }else{
                 TextBook textBook = textBooks.get(0);
@@ -674,6 +698,7 @@ public class BaseServiceImpl implements BaseService {
                     dataDao.addDataByBatch(dataList);
                 }
                 textBookDao.updateTextBook(textBook);
+                saveLog("修改",ownerName,owner);
             }
 
         } catch (Exception e) {
@@ -802,6 +827,9 @@ public class BaseServiceImpl implements BaseService {
 
 
     public Map<String,Object> remove (List<Integer> ids,int type){
+        String owner = getTeacher(session).getJobNumber();
+        String ownerName = getTeacher(session).getName();
+        Query q = new Query();
         Map<String , Object> map = new HashMap<>();
         try {
             TypeEnum t = TypeEnum.find(type) ;
@@ -811,50 +839,75 @@ public class BaseServiceImpl implements BaseService {
             switch (t){
                 case BUILDPROJECT:
                     buildProjectDao.deleteBuildProjectByBatch(ids);
+                    deleteAttach(ids,q);
                     for (int id : ids ) {
                         dataDao.deleteByRecord(id,BUILDPROJECT.getIndex()+"");
                         teacher.decRecord(BUILDPROJECT.getIndex()+"",getTeacher(session).getJobNumber());
                     }
+                    saveLog("删除建设课程",ownerName,owner);
                     break;
                 case AWARDRECORDS:
                     awardRecordsDao.deleteAwardRecordsByBatch(ids);
-                    for (int id : ids ) {
-                        dataDao.deleteByRecord(id,AWARDRECORDS.getIndex()+"");
-                        teacher.decRecord(AWARDRECORDS.getIndex()+"",getTeacher(session).getJobNumber());
-                    }
+                    deleteAttach(ids,q);
+//                    for (int id : ids ) {
+//                        dataDao.deleteByRecord(id,AWARDRECORDS.getIndex()+"");
+//                        teacher.decRecord(AWARDRECORDS.getIndex()+"",getTeacher(session).getJobNumber());
+//                    }
+                    saveLog("删除获奖记录",ownerName,owner);
                     break;
                 case GUIDERECORD:
                     guideRecordDao.deleteGuideRecordByBatch(ids);
+                    deleteAttach(ids,q);
                     for (int id : ids ) {
                         dataDao.deleteByRecord(id,GUIDERECORD.getIndex()+"");
                     }
+                    saveLog("删除指导记录",ownerName,owner);
                     break;
                 case PROJECTASSESS:
                     projectAssessDao.deleteProjectAssessByBatch(ids);
+                    deleteAttach(ids,q);
                     for (int id : ids ) {
                         dataDao.deleteByRecord(id,PROJECTASSESS.getIndex()+"");
 
                     }
+                    saveLog("删除课程考核方式",ownerName,owner);
                     break;
                 case TEACHERREFORM:
                     teachingReformDao.deleteTeachingReformByBatch(ids);
+                    deleteAttach(ids,q);
                     for (int id : ids ) {
                         dataDao.deleteByRecord(id,TEACHERREFORM.getIndex()+"");
                         teacher.decRecord(TEACHERREFORM.getIndex()+"",getTeacher(session).getJobNumber());
                     }
+                    saveLog("删除教改课题",ownerName,owner);
                     break;
                 case TEXTBOOK:
                     textBookDao.deleteTextBookByBatch(ids);
+                    deleteAttach(ids,q);
                     for (int id : ids ) {
                         dataDao.deleteByRecord(id,TEXTBOOK.getIndex()+"");
                         teacher.decRecord(TEXTBOOK.getIndex()+"",getTeacher(session).getJobNumber());
                     }
+                    saveLog("删除出版教材",ownerName,owner);
                     break;
                 case NOTICE:
                     noticeDao.deleteNotice(ids);
+                    deleteAttach(ids,q);
                     for (int id : ids ) {
                         dataDao.deleteByRecord(id,NOTICE.getIndex()+"");
                     }
+                    saveLog("删除公告",ownerName,owner);
+                    break;
+                case DATA:
+                    for(int id : ids){
+                        Query query = new Query();
+                        query.setId(id);
+                        Data data = dataDao.getData(query).get(0);
+                        delete(data.getDataPath()+data.getDataName());
+                    }
+                    dataDao.deleteDataByBatch(ids);
+
+
                     break;
                 case LOG:
 
@@ -902,6 +955,7 @@ public class BaseServiceImpl implements BaseService {
                     if (dataList.size()>0){
                         dataDao.addDataByBatch(dataList);
                     }
+                    saveLog("添加建设课程",ownerName,owner);
                 }
             }else{
                 BuildProject buildProject = buildProjects.get(0);
@@ -928,6 +982,7 @@ public class BaseServiceImpl implements BaseService {
                     dataDao.addDataByBatch(dataList);
                 }
                 buildProjectDao.updateBuildProject(buildProject);
+                saveLog("修改建设课程",ownerName,owner);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1029,8 +1084,44 @@ public class BaseServiceImpl implements BaseService {
         return map;
     }
 
+    public void saveLog(String operation,String operationName,String jobNumber){
+        Log log = new Log();
+        log.setOperationTime(new Date());
+        log.setStep(operation);
+        log.setOperator(jobNumber);
+        log.setOperatorName(operationName);
+        logDao.addLog(log);
+    }
 
     private Teacher getTeacher(HttpSession session){
         return (Teacher) session.getAttribute("teacher");
+    }
+
+    @Override
+    public Map<String, Object> updateAttach(Data data) {
+        Map<String , Object> map = new HashMap<>();
+        try {
+           dataDao.addData(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code",1895);
+            map.put("msg","add error");
+            return map;
+        }
+        map.put("code",0);
+        map.put("msg","ok");
+
+        return map;
+    }
+
+    private void delete(String fileName){
+        new File(fileName).delete();
+    }
+    private void deleteAttach(List<Integer> ids,Query query){
+        for (int id : ids){
+            query.setRecordId(id);
+            List<Data> dataList = dataDao.getData(query);
+            dataList.forEach(data -> delete(data.getDataPath()+"/"+data.getDataName()));
+        }
     }
 }

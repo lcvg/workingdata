@@ -13,7 +13,7 @@ import VueResource from 'vue-resource';
 import axios from 'axios';
 import qs from 'qs';
 import  VueQuillEditor from 'vue-quill-editor'
-
+import Cookies from 'js-cookie';
 Vue.use(VueQuillEditor)
 
 
@@ -106,3 +106,5 @@ export function fetch(url, params) {
             })
     })
 }
+
+

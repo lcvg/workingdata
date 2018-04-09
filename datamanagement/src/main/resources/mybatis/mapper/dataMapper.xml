@@ -24,6 +24,9 @@
         <if test="dataType != null and dataType!=''">
             and dataType = #{dataType}
         </if>
+        <if test="recordId != null">
+            and recordId = #{recordId}
+        </if>
     </sql>
 
     <insert id="addData" useGeneratedKeys="true" keyProperty="id" parameterType="Data">

@@ -159,7 +159,7 @@ export default {
         return {
             sel:"",
             check:"",
-            kjMod:true,
+            kjMod:false,
             level:"",
             item:{},
             condition:"",
@@ -274,6 +274,8 @@ export default {
                 this.kjMod = false
             }else if(localStorage.projectAssess==1){
                 this.kjMod = false
+            }else{
+                this.kjMod = true
             }
         },
         getData () {
@@ -427,6 +429,7 @@ export default {
                         }else{
                             localStorage.setItem("projectAssess",1);
                         }
+                         vm.showMod()
                      
                 })
                 .catch((err) => {   
@@ -442,7 +445,6 @@ export default {
             this.kj = true;
         }
         this.getConfig()
-        this.showMod()
     }
 
 };

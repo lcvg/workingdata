@@ -32,7 +32,8 @@
                 <div class="header-avator-con">
                     <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
                     <lock-screen></lock-screen>
-                    <message-tip v-model="mesCount"></message-tip>
+                    <message-tip v-model="mesCount"  @setCount="setCount" ></message-tip>
+                    
                     <theme-switch></theme-switch>
                     
                     <div class="user-dropdown-menu-con">
@@ -91,7 +92,8 @@
                 shrink: false,
                 userName: '',
                 isFullScreen: false,
-                openedSubmenuArr: this.$store.state.app.openedSubmenuArr
+                openedSubmenuArr: this.$store.state.app.openedSubmenuArr,
+                msgCount:0
             };
         },
         computed: {
@@ -117,7 +119,7 @@
                 return this.$store.state.app.menuTheme;
             },
             mesCount () {
-                return this.$store.state.app.messageCount;
+                return  this.msgCount;
             }
         },
         methods: {
@@ -159,6 +161,10 @@
                     });
                 }
             },
+            setCount(){
+               
+                this.msgCount = 0
+            },
             checkTag (name) {
                 let openpageHasTag = this.pageTagsList.some(item => {
                     if (item.name === name) {
@@ -183,63 +189,45 @@
             fullscreenChange (isFullScreen) {
                 // console.log(isFullScreen);
             },
-             getConfig(){
-                 let vm = this;
-                this.$axios.get('/findConfig')
-                    .then(function (response) {
-                        for(var item of response.data.list){
-                            console.log(item)
-                            if(item.id==1){
-                                if(new Date()>new Date(item.beginDate) && new Date()<new Date(item.endDate) ){
-                                   localStorage.setItem("buildProject",0);
-                                }else{
-                                    localStorage.setItem("buildProject",1);
-                                }
-                            }
-                            if(item.id==2){
-                                if(new Date()>new Date(item.beginDate) && new Date()<new Date(item.endDate) ){
-                                   localStorage.setItem("guideRecord",0);
-                                }else{
-                                    localStorage.setItem("guideRecord",1);
-                                }
-                            }
-                            if(item.id==3){
-                                if(new Date()>new Date(item.beginDate) && new Date()<new Date(item.endDate) ){
-                                   localStorage.setItem("projectAssess",0);
-                                }else{
-                                    localStorage.setItem("projectAssess",1);
-                                }
-                            }
-                            if(item.id==4){
-                                if(new Date()>new Date(item.beginDate) && new Date()<new Date(item.endDate) ){
-                                   localStorage.setItem("teachingReform",0);
-                                }else{
-                                    localStorage.setItem("teachingReform",1);
-                                }
-                            }
-                            if(item.id==5){
-                                if(new Date()>new Date(item.beginDate) && new Date()<new Date(item.endDate) ){
-                                   localStorage.setItem("textBook",0);
-                                }else{
-                                    localStorage.setItem("textBook",1);
-                                }
-                            }
-                            if(item.id==6){
-                                if(new Date()>new Date(item.beginDate) && new Date()<new Date(item.endDate) ){
-                                   localStorage.setItem("awardRecord",0);
-                                }else{
-                                    localStorage.setItem("awardRecord",1);
-                                }
-                            }
+             connection(){
+                var socket;  
+                let vm = this;
+                if(typeof(WebSocket) == "undefined") {  
+                    console.log("您的浏览器不支持WebSocket");  
+                }else{  
+                    console.log("您的浏览器支持WebSocket");  
+                    
+                    //实现化WebSocket对象，指定要连接的服务器地址与端口  
+
+                    socket = new WebSocket("ws://localhost:8070/websocket");  
+                    //打开事件  
+                    socket.onopen = function() {  
+                        console.log("Socket 已打开");  
+                        //socket.send("这是来自客户端的消息" + location.href + new Date());  
+                    };  
+                    //获得消息事件  
+                    socket.onmessage = function(msg) {  
+                        console.log(msg.data);  
+                        //发现消息进入    调后台获取  
+                        if(msg.data=="true"){
+                            vm.$Notice.info({
+                                title: '您有新的公告，请注意查看！！！',
+                                duration: 0
+                            });
+                            localStorage.setItem("messageCount",1);
+                           vm.msgCount=1;
                         }
-                        
-                        vm.$Notice.warning({
-                                        title: '操作成功！！！',
-                                        duration: 0
-                                    });
-                    })
-                    .catch((err) => {   
-                    });
+                    };  
+                    //关闭事件  
+                    socket.onclose = function() {  
+                        console.log("Socket已关闭");  
+                    };  
+                    //发生了错误事件  
+                    socket.onerror = function() {  
+                        alert("Socket发生了错误");  
+                    }  
+                    
+                }  
             }
         },
         watch: {
@@ -258,7 +246,11 @@
         },
         mounted () {
             this.init();
-            // this.getConfig()
+            this.connection();
+           window.addEventListener("storage", function (e) {
+                alert(e.newValue);
+            });
+            
         },
         created () {
             // 显示打开的页面的列表

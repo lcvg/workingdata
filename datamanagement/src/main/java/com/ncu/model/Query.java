@@ -42,6 +42,15 @@ public class Query {
     private String assessMode;
     private String sortType;
     private String dataType;
+    private Integer recordId;
+
+    public Integer getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
+    }
 
     public String getDataType() {
         return dataType;

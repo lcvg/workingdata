@@ -136,7 +136,7 @@
     </update>
 
     <select id="getTeacher" resultType="TeacherVO" parameterType="TeacherQuery">
-        select t.id, name, t.jobNumber,sex, department, professionalTitle,duty, phoneNumber,u.roleId as permission from t_teacher t left join t_user_role u  on t.jobNumber = u.jobNumber
+        select t.id, name, t.jobNumber,sex, depName as department,depId, professionalTitle,duty, phoneNumber,u.roleId as permission from t_teacher t left join t_user_role u  on t.jobNumber = u.jobNumber left join t_department d on t.department= d.depId
         <where>
             <if test="id != null">
                 id = #{id}

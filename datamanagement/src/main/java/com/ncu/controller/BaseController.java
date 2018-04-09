@@ -6,32 +6,23 @@ import com.ncu.service.BaseService;
 import com.ncu.shiro.Role;
 import com.ncu.shiro.RoleToPermission;
 import com.ncu.shiro.UserToRole;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility;
-//import org.apache.shiro.authz.annotation.RequiresGuest;
-//import org.apache.shiro.authz.annotation.RequiresRoles;
-//import org.apache.shiro.authz.annotation.RequiresUser;
+import com.ncu.websocket.WebSocketServer;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.net.InetAddress;
-import java.net.URLEncoder;
-import java.net.UnknownHostException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+//import org.apache.shiro.authz.annotation.RequiresGuest;
+//import org.apache.shiro.authz.annotation.RequiresRoles;
+//import org.apache.shiro.authz.annotation.RequiresUser;
 
 /**
  * Created by 黄重杨 on 2018/2/5.
@@ -50,14 +41,14 @@ public class BaseController {
     @Autowired
     HttpSession session;
 
-    @Autowired
-    HttpServletResponse response;
+//    @Autowired
+//    HttpServletResponse response;
+    @Value("${attachmentUrl}")
+    String basePath;
+
 
 
     @GetMapping(value = "find",produces="application/json;charset=UTF-8")
-//    @OpeartionName(name = "查看记录")
-//    @RequiresUser
-//    @RequiresRoles("admin")
     public Map<String ,Object> findInfo(Query query){
         return baseService.find(query);
 
@@ -148,7 +139,7 @@ public class BaseController {
     public Map<String ,Object> uploadCoverToLocal(MultipartFile[]file) throws FileNotFoundException {
         Map<String ,Object> map = new HashMap<>();
 //        String basePath = ResourceUtils.getURL("classpath:").getPath()+"static";
-        String basePath = "C:\\project\\dingding\\工作资料管理\\workingdata-master\\datamanagement\\target\\classes\\static\\attachment\\";
+//        String basePath = "C:\\project\\dingding\\工作资料管理\\workingdata-master\\datamanagement\\target\\classes\\static\\attachment\\";
 //        System.out.println(basePath.substring(1,basePath.length()));
         String pathName = "";
         List<String> paths = new ArrayList<>();
@@ -172,13 +163,48 @@ public class BaseController {
         map.put("errcode","ok");
         return map;
     }
+    @PostMapping("uploadPlan")
+    public Map<String ,Object> uploadPlan(MultipartFile[]file,String jobNumber,String name) throws FileNotFoundException {
+        System.out.println(jobNumber+name);
+        Map<String ,Object> map = new HashMap<>();
+//        String basePath = ResourceUtils.getURL("classpath:").getPath()+"static";
+//        String basePath = "C:\\project\\dingding\\工作资料管理\\workingdata-master\\datamanagement\\target\\classes\\static\\attachment\\";
+//        System.out.println(basePath.substring(1,basePath.length()));
+        Data data = new Data();
+        data.setDataId("9"+System.currentTimeMillis()+"123");
+        data.setDataType("9");
+        data.setOwner(jobNumber);
+        data.setOwnerName(name);
+        data.setRecordId(0);
+        data.setUploadDate(new Date());
+        data.setDataPath(basePath);
+
+        String pathName = "";
+        for (MultipartFile f: file) {
+
+            pathName = System.currentTimeMillis()+f.getOriginalFilename();
+            System.out.println(basePath+pathName);
+            data.setDataName(pathName);
+            try {
+                f.transferTo(new File(basePath+pathName));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return  baseService.updateAttach(data);
+    }
+
+
+
     @PostMapping("deleteAttachment")
-    public Map<String ,Object> deleteAttachment(String path) throws FileNotFoundException {
+    public Map<String ,Object> deleteAttachment(@RequestBody PathVO path) throws FileNotFoundException {
         Map<String ,Object> map = new HashMap<>();
             try {
-                System.out.println(path);
+                System.out.println(path.getDataPath()+"/"+path.getDataName());
 //                String basePath = "C:\\project\\dingding\\工作资料管理\\workingdata-master\\datamanagement\\target\\classes\\static\\attachment\\";
-                new File(path).delete();
+                new File(path.getDataPath()+"/"+path.getDataName()).delete();
             } catch (Exception e) {
                 e.printStackTrace();
                 map.put("errmsg", "upload error");
@@ -209,7 +235,7 @@ public class BaseController {
 //        response.setContentType("application/octet-stream");
 
         response.addHeader("Content-Disposition",
-                "attachment;fileName=\"" +  new String(data.getDataName().getBytes("gbk"),"iso-8859-1")  + "\"");
+                "attachment;fileName=\"" +  new String(data.getDataName().substring(13).getBytes("gbk"),"iso-8859-1")  + "\"");
 
             IOUtils.copy(in,response.getOutputStream());
             response.flushBuffer();
@@ -251,7 +277,8 @@ public class BaseController {
                 //将需要压缩的文件格式化为输入流
                 zipSource = new FileInputStream(file);
                 //压缩条目不是具体独立的文件，而是压缩包文件列表中的列表项，称为条目，就像索引一样
-                ZipEntry zipEntry = new ZipEntry(file.getName());
+
+                ZipEntry zipEntry = new ZipEntry(file.getName().substring(13));
                 //定位该压缩条目位置，开始写入文件到压缩包中
 
                 zipStream.putNextEntry(zipEntry);
@@ -298,6 +325,8 @@ public class BaseController {
     public Map addUserToRole(@RequestBody UserToRole role){
         return baseService.addUserToRole(role);
     }
+
+
 
 
 

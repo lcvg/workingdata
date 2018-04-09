@@ -160,7 +160,7 @@ export default {
     },
     data () {
         return {
-            kjMod:true,
+            kjMod:false,
             sel:"",
             check:"",
             level:"",
@@ -353,6 +353,9 @@ export default {
             }else if(localStorage.awardRecord==1){
                 this.kjMod = false
             }
+            else{
+                this.kjMod = true;
+            }
         },
         
          get(type,query,pageNum){
@@ -420,6 +423,7 @@ export default {
                         }else{
                             localStorage.setItem("awardRecord",1);
                         }
+                         vm.showMod()
                     
                 })
                 .catch((err) => {   
@@ -430,13 +434,17 @@ export default {
        
     },
     created () {
+      
         if(this.vis=='false'){
             this.kj = true; 
         }
-        this.getConfig()
-         this.showMod()
+           this.getConfig()
+        
+     
+        
     },
     mounted(){
+       
         
         this.jobNumber = JSON.parse(localStorage.teacher).jobNumber;
         

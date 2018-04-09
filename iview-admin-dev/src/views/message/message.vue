@@ -36,7 +36,7 @@
                         <!-- <hr style="height:5px;border:none;border-top:5px ridge green;" /> -->
 
                         <div class="msg-title">以下是附件信息：</div>
-                          <p  class="message-content" v-for="item of mes.listData"><a :href="'http://localhost:8070/download?id='+item.id">{{item.dataName}}</a></p>
+                          <p  class="message-content" v-for="item of mes.listData"><a :href="'http://localhost:8070/download?id='+item.id">{{item.dataName.substring(13)}}</a></p>
                     </div>
                     
                 </div>
@@ -46,8 +46,39 @@
 </template>
 
 <script>
+const deleteButton = (h,vm,params) => {
+    return h('Poptip', {
+        props: {
+            confirm: true,
+            title: '您确定要删除这条数据吗?',
+            transfer: true
+        },
+        on: {
+            'on-ok': () => {
+
+                 var param = [];
+                param.push(params.row.id);
+                vm.handleDel(param);
+            }
+        }
+    }, [
+        h('a', {
+            style: {
+
+                margin: '0 5px'
+            },
+            props: {
+                type: 'error',
+                placement: 'top'
+            }
+        }, '删除')
+    ]);
+};
 export default {
     name: 'message_index',
+    props:[
+        "type"
+   ],
     data () {
     
         return {
@@ -57,11 +88,12 @@ export default {
             recyclebinList: [],
             currentMessageType: 'unread',
             showMesTitleList: true,
-            unreadCount: 0,
+            unreadCount:1,
             hasreadCount: 0,
             dataCount:0,
             pageSize:10,
-            recyclebinCount: 0,
+            currentPage:1,
+            recyclebinCount: 1,
             noDataText: '暂无未读消息',
             mes: {
                 title: '',
@@ -94,7 +126,13 @@ export default {
                     align: 'center',
                     width: 180,
                     render: (h, params) => {
-                        return h('span', [
+                        if(this.type=='1'){
+                             return h('div', [
+                             deleteButton(h,this,params)
+                            ]);
+                            
+                        }else{
+                            return h('span', [
                             h('Icon', {
                                 props: {
                                     type: 'android-time',
@@ -111,6 +149,8 @@ export default {
                                 }
                             }, this.formatDate(params.row.createDate))
                         ]);
+                        }
+                        
                     }
                 },
             ]
@@ -140,10 +180,38 @@ export default {
             this.mes.listData = index.listData;
             
         },
+        handleDel(ids){
+            var vm = this;
+             this.$axios.post('/remove?type=7',ids, {headers: {"Content-Type": "application/json"}})
+                    .then(function (response) {
+                       
+                      if(response.data.code==0){
+                            vm.$Notice.success({
+                                title: '删除成功！！！',
+                                duration: 2
+                            });
+                            var maxPage = Math.ceil((vm.dataCount-1)/vm.pageSize);
+                            if (maxPage<vm.currentPage){
+                                vm.currentPage = maxPage;  
+                            }
+                            vm.changepage(vm.currentPage) 
+                        }else{
+                             vm.$Notice.error({
+                            title: '删除失败！！！',
+                            duration: 2
+                        });
+                        }
+                       
+                    })
+                    .catch(function (response) {
+                    })
+        },
          get(type,query,pageNum){
              query["type"]=type;
              query["pageNum"]=pageNum;
              query["pageSize"]=this.pageSize;
+             query["department"]=JSON.parse(localStorage.teacher).depId;
+             
              let vm = this;
              this.currentPage =  pageNum;
              this.$axios.get('/find', {params: query})
@@ -158,6 +226,9 @@ export default {
     },
     
     mounted () {
+        
+        localStorage.setItem("messageCount",0);
+        // alert( localStorage.getItem("messageCount"))
         this.get(7,{},1);
     },
     watch: {

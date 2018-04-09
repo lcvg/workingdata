@@ -170,7 +170,7 @@ export default {
             // columnsList: [],
             sel:"",
             identifyItem:"",
-            kjMod:true,
+            kjMod:false,
             identify:"",
             kj:false,
             check:"",
@@ -295,6 +295,8 @@ export default {
                 this.kjMod = false
             }else if(localStorage.teachingReform==1){
                 this.kjMod = false
+            }else{
+                this.kjMod = true
             }
         },
         getData () {
@@ -458,6 +460,7 @@ export default {
                         }else{
                             localStorage.setItem("teachingReform",1);
                         }
+                         vm.showMod()
                      
                 })
                 .catch((err) => {   
@@ -471,7 +474,6 @@ export default {
             this.kj = true; 
         }
         this.getConfig()
-         this.showMod()
          
     },
     mounted () {

@@ -55,7 +55,7 @@
                     发送部门：
                      <Row class="dep">
                          <Select v-model="articleTagSelected" multiple @on-change="handleSelectTag" placeholder="请选择部门">
-                            <Option v-for="item in dep" :value="item.depId" :key="item.depId">{{ item.depName }}</Option>
+                            <Option v-for="item of dep" :value="item.depId" >{{ item.depName }}</Option>
                         </Select>
                                 
                     </Row>
@@ -63,7 +63,7 @@
                     <p class="margin-top-10">
                         
                        <Row>
-                        <span class="publish-button"><Button @click="handleSaveDraft">保存草稿</Button></span>
+                        <!-- <span class="publish-button"><Button @click="handleSaveDraft">保存草稿</Button></span> -->
                         <span class="publish-button"><Button @click="handlePublish" :loading="publishLoading" icon="ios-checkmark" style="width:90px;" type="primary">发布</Button></span>
                        
                        </Row>
@@ -148,10 +148,7 @@ export default {
             handleClick (index) {
                 var current = this;
                 // current.$refs.dd[index].innerText,
-                this.$axios.post('/deleteAttachment', {
-                    path: current.listData[index]
-                    
-                })
+                this.$axios.post('/deleteAttachment', current.listData[index])
                 .then(function (response) {
                     current.listData.splice(index,1);
                     console.log(JSON.stringify(current.listData))
@@ -281,7 +278,7 @@ export default {
             colorpicker
             hr
             preview
-            imageupload
+            
           `,
 
           

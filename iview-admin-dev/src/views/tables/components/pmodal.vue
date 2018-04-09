@@ -60,7 +60,7 @@
                         
                         <div class="tip-one" >
                         <Icon type="document-text" size="15"></Icon>
-                        <span ref="dd">{{ list["dataName"] }}</span>
+                        <span ref="dd">{{ list["dataName"].substring(13) }}</span>
                         <Icon type="close" @click.native="handleClick(index)" class="icon"></Icon>
                         </div>
                     </li>
@@ -182,10 +182,7 @@ export default {
             },
             handleClick (index) {
                 var current = this;
-                this.$axios.post('/deleteAttachment', {
-                    path: current.listData[index]
-                    
-                })
+                this.$axios.post('/deleteAttachment', current.listData[index])
                 .then(function (response) {
                     current.listData.splice(index,1);
                     console.log(JSON.stringify(current.listData))

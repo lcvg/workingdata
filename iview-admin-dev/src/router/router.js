@@ -119,6 +119,7 @@ export const appRouter = [
         children: [
             { path: 'teacher',  title: '教师管理',access: 1, name: 'teacher-table', icon: 'edit', component: resolve => { require(['@/views/tables/teacher.vue'], resolve); } },
             {path: 'notice', title: '发布公告',access: 1,  name: 'notice-table', icon: 'edit',  component: resolve => { require(['@/views/form/article-publish/article-publish.vue'], resolve); }},
+            { path: 'noticeList', title: '公告列表', name: 'notice_index', component: resolve => { require(['@/views/message/messageList.vue'], resolve); } },
             { path: 'teacherInfo', title: '详情',access: 1,  name: 'teacherInfo-table', icon: 'edit',  component: resolve => { require(['@/views/tables/teacherInfo.vue'], resolve); }},
             { path: 'statistics', title: '统计',access: 1,  name: 'statistics-table', icon: 'edit',  component: resolve => { require(['@/views/tables/statistic.vue'], resolve); }}
         ]
@@ -175,6 +176,16 @@ export const appRouter = [
         
         children: [
             { path: 'textBook', title: '出版教材', name: 'textBook-table', icon: 'ios-book',  component: resolve => { require(['@/views/tables/textBook.vue'], resolve); }}
+        ]
+    },
+    {
+        path: '/',
+        icon: 'ios-book',
+        title: "其他资料",
+        name: 'plan',
+        component: Main,
+        children: [
+            { path: 'plan', title: '其他资料', name: 'plan-table', icon: 'ios-book',  component: resolve => { require(['@/views/tables/plan.vue'], resolve); }}
         ]
     },
     {

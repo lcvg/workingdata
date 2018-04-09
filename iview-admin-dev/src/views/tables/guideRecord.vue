@@ -183,7 +183,7 @@ export default {
             // columnsList: [],
             sel:"",
             check:"",
-            kjMod:true,
+            kjMod:false,
             kj:false,
             level:"",
             condition:"",
@@ -311,6 +311,8 @@ export default {
                 this.kjMod = false
             }else if(localStorage.guideRecord==1){
                 this.kjMod = false
+            }else{
+                this.kjMod = true
             }
         },
         getData () {
@@ -455,9 +457,7 @@ export default {
                                 vm.currentPage = maxPage;
                                 
                             }
-                            vm.changepage(vm.currentPage)
-                            // vm.get(1,vm.currentPage);
-                                 
+                            vm.changepage(vm.currentPage)  
                             
                         }else{
                              vm.$Notice.error({
@@ -468,11 +468,6 @@ export default {
                        
                     })
                     .catch(function (response) {
-                        // alert(JSON.stringify(response))
-                        
-                    
-                      
-                       
                     })
 
         },
@@ -486,6 +481,7 @@ export default {
                         }else{
                             localStorage.setItem("guideRecord",1);
                         }
+                         vm.showMod()
                 })
                 .catch((err) => {   
                 });
@@ -498,7 +494,6 @@ export default {
             this.kj = true; 
         }
         this.getConfig()
-         this.showMod()
     },
     mounted(){
         this.jobNumber = JSON.parse(localStorage.teacher).jobNumber;

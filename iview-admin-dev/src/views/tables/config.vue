@@ -51,7 +51,7 @@
         </Row> 
         <i-button type="primary" class="add"  icon="ios-search" @click="apply">应用到全部</i-button>
          <i-button type="primary" class="save"  icon="ios-search" @click="save">保存</i-button>
-          <i-button type="default" class="can"  icon="ios-search" @click="remove">取消</i-button>
+          <i-button type="default" class="can"  icon="ios-search" @click="cansle">取消</i-button>
         </div>
     </div>
  
@@ -164,7 +164,7 @@ export default {
                         if (response.data.code == 0) {
                             vm.$Message.destroy();
                             vm.$Notice.success({
-                                title: '操作成功！！！',
+                                title: '保存成功！！！',
                                 duration: 2
                             });
     
@@ -174,7 +174,7 @@ export default {
                             vm.$Message.destroy();
                             vm.$Notice.error({
     
-                                title: '操作失败！！！',
+                                title: '保存失败！！！',
                                 duration: 2
                             });
                         }
@@ -184,6 +184,9 @@ export default {
                     })
     
 
+        },
+        cansle(){
+            window.history.back(-1);
         }
        
 

@@ -35,7 +35,13 @@
                         <Table stripe ref="selection" :columns="columnsList" :data="tableData"  @on-selection-change="selectChange"></Table>
                     </div>
                      <div class="page">
-                        <Page :total="dataCount" :page-size="pageSize" @on-change="changepage" show-total :current="currentPage"></Page>
+                        <Page :total="dataCount" show-sizer  :page-size="pageSize" @on-change="changepage" show-total :current="currentPage" @on-page-size-change="changeSize">
+                            <!-- <Select v-model="pageSize" class="pageSelect"  style="width: 70px;"  >
+                            <Option value="5" selected>10条/页</Option>
+                            <Option value="20">20条/页</Option> -->
+                        </Select>
+                        </Page>
+                         
                     </div>
                 </Card>
             </Col>
@@ -97,7 +103,7 @@ export default {
             // 初始化信息总条数
             dataCount:0,
             // 每页显示多少条
-            pageSize:6,
+            pageSize:10,
             jobNumber:"",
         
             historyColumns: [],
@@ -181,6 +187,9 @@ export default {
            
             this.get(8,{condition:this.condition,name:this.name,jobNumber:this.jobNumber},index)
            
+        },
+        changeSize(size){
+            this.pageSize = size;
         },
         search(){
             this.current = 1;
@@ -288,6 +297,11 @@ export default {
     mounted(){
         this.getData();
        
+    },
+    watch:{
+        "pageSize":function(){
+             this.changepage(1)
+        }
     }
 
 };

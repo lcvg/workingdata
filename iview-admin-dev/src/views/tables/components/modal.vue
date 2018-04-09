@@ -3,7 +3,7 @@
 </style>
 <template>
     <div>
-        <Button type="default" icon="plus" @click="show(1,1,0)" class="addbtn" v-if="kj">添加建设课题</Button>
+        <Button type="default" icon="plus" @click="show(1,1,0)" class="addbtn" v-if="kj">添加建设课程</Button>
             <Modal
                 v-model="modal1"
                 title="添加建设课程信息"
@@ -71,7 +71,7 @@
                      <li v-for="(list,index) of listData" >
                         <div class="tip-one" >
                         <Icon type="document-text" size="15"></Icon>
-                        <span ref="dd">{{ list["dataName"] }}</span>
+                        <span ref="dd">{{ list["dataName"].substring(13) }}</span>
                         <Icon type="close" @click.native="handleClick(index)" class="icon"></Icon>
                         </div>
                     </li>
@@ -216,10 +216,10 @@ export default {
             handleClick (index) {
                 var current = this;
                 // current.$refs.dd[index].innerText,
-                this.$axios.post('/deleteAttachment', {
-                    path: current.listData[index]
-                    
-                })
+                console.log(current.listData[index])
+                this.$axios.post('/deleteAttachment', 
+                     current.listData[index]
+                )
                 .then(function (response) {
                       current.listData.splice(index,1);
                     current.$Message.success('文件删除成功');

@@ -1,0 +1,45 @@
+===2018-04-02 15:42:02.281 ERROR org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter Line:42  - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field baseService in com.ncu.aop.LogAspect required a bean of type 'com.ncu.service.BaseService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.ncu.service.BaseService' in your configuration.
+
+===2018-04-02 15:42:33.036 ERROR org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter Line:42  - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field baseService in com.ncu.aop.LogAspect required a bean of type 'com.ncu.service.BaseService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.ncu.service.BaseService' in your configuration.
+
+===2018-04-02 15:42:40.467 ERROR org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter Line:42  - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field baseService in com.ncu.aop.LogAspect required a bean of type 'com.ncu.service.BaseService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.ncu.service.BaseService' in your configuration.
+

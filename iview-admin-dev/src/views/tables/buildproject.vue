@@ -152,7 +152,7 @@ export default {
         return {
             sel:"",
             check:"",
-            kjMod:true,
+            kjMod:false,
             condition:"",
             identifyItem:"",
             identify:"",
@@ -259,6 +259,8 @@ export default {
                 this.kjMod = false
             }else if(localStorage.buildProject==1){
                 this.kjMod = false
+            }else{
+                this.kjMod = true
             }
         },
         getData () {
@@ -396,6 +398,7 @@ export default {
                         }else{
                             localStorage.setItem("buildProject",1);
                         }
+                         vm.showMod()
                      
                 })
                 .catch((err) => {   
@@ -448,7 +451,6 @@ export default {
             this.kj = true; 
         }
         this.getConfig()
-         this.showMod()
     },
     mounted () {
      this.jobNumber = JSON.parse(localStorage.teacher).jobNumber;

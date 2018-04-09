@@ -18,6 +18,16 @@ public class TeacherVO extends Teacher {
     private Integer textBook;
     private Integer teacherReform;
 
+    private String depId;
+
+    public String getDepId() {
+        return depId;
+    }
+
+    public void setDepId(String depId) {
+        this.depId = depId;
+    }
+
     public Integer getBuildProject() {
         return buildProject;
     }

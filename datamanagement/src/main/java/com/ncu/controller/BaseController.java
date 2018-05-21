@@ -1,11 +1,13 @@
 package com.ncu.controller;
 
 import com.ncu.aop.OpeartionName;
+import com.ncu.env.TypeEnum;
 import com.ncu.model.*;
 import com.ncu.service.BaseService;
 import com.ncu.shiro.Role;
 import com.ncu.shiro.RoleToPermission;
 import com.ncu.shiro.UserToRole;
+import com.ncu.utils.WriteExcel;
 import com.ncu.websocket.WebSocketServer;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import static com.ncu.env.TypeEnum.BUILDPROJECT;
 
 //import org.apache.shiro.authz.annotation.RequiresGuest;
 //import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -49,48 +54,44 @@ public class BaseController {
 
 
     @GetMapping(value = "find",produces="application/json;charset=UTF-8")
-    public Map<String ,Object> findInfo(Query query){
+    public Map<String ,Object> findInfoa(Query query){
         return baseService.find(query);
 
     }
     @PostMapping(value = "addBuildProject",produces="application/json;charset=UTF-8")
-    @OpeartionName(name = "添加建设课程")
-    public Map<String ,Object> addBuildProject(@RequestBody List<BuildProject> json ){
+
+    public Map<String ,Object> addBuildProjecta(@RequestBody List<BuildProject> json ){
         return baseService.addBuildProjectByBatch(json);
     }
     @PostMapping(value = "addAwardRecords",produces="application/json;charset=UTF-8")
-    @OpeartionName(name = "添加获奖记录")
-    public Map<String ,Object> addAwardRecords(@RequestBody List<AwardRecords> json){
+
+    public Map<String ,Object> addAwardRecordsa(@RequestBody List<AwardRecords> json){
         return baseService.addAwardRecordsByBatch(json);
     }
     @PostMapping(value = "addGuideRecord",produces="application/json;charset=UTF-8")
-    @OpeartionName(name = "添加指导记录")
-    public Map<String ,Object> addGuideRecord(@RequestBody List<GuideRecord> json){
+
+    public Map<String ,Object> addGuideRecorda(@RequestBody List<GuideRecord> json){
         return baseService.addGuideRecordByBatch(json);
     }
     @PostMapping(value = "addProjectAssess",produces="application/json;charset=UTF-8")
-    @OpeartionName(name = "添加课程考核")
-    public Map<String ,Object> addProjectAssess(@RequestBody List<ProjectAssess> json){
+    public Map<String ,Object> addProjectAssessa(@RequestBody List<ProjectAssess> json){
         return baseService.addProjectAssessByBatch(json);
     }
     @PostMapping(value = "addTeachingReform",produces="application/json;charset=UTF-8")
-    @OpeartionName(name = "添加教改课题")
-    public Map<String ,Object> addTeachingReform(@RequestBody List<TeachingReform> json){
+    public Map<String ,Object> addTeachingReforma(@RequestBody List<TeachingReform> json){
         return baseService.addTeachingReformByBatch(json);
     }
     @PostMapping(value = "addTextBook",produces="application/json;charset=UTF-8")
-    @OpeartionName(name = "添加出版教材")
-    public Map<String ,Object> addTextBook(@RequestBody List<TextBook> json){
+    public Map<String ,Object> addTextBooka(@RequestBody List<TextBook> json){
         return baseService.addTextBookByBatch(json);
     }
     @PostMapping(value = "addNotice",produces="application/json;charset=UTF-8")
-    @OpeartionName(name = "发布公告")
-    public Map<String ,Object> addNotice(@RequestBody Notice notice){
+    public Map<String ,Object> addNoticea(@RequestBody Notice notice){
         return baseService.addNotice(notice);
     }
 
     @PostMapping(value = "addDepartment",produces="application/json;charset=UTF-8")
-    public Map<String ,Object> addDepartment(@RequestBody Department department){
+    public Map<String ,Object> addDepartmenta(@RequestBody Department department){
         return baseService.addDepartment(department);
     }
 
@@ -98,7 +99,7 @@ public class BaseController {
     @PostMapping(value = "remove",produces="application/json;charset=UTF-8")
 //    @OpeartionName(name = "remove")
 //    @RequiresUser
-    public Map<String ,Object> remove(@RequestBody List<Integer> ids, @RequestParam int type){
+    public Map<String ,Object> removea(@RequestBody List<Integer> ids, @RequestParam int type){
 //        response.setHeader("Access-Control-Allow-Credentials", "true");
 //        response.setHeader("Access-Control-Allow-Origin", "*");
 //        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
@@ -109,24 +110,24 @@ public class BaseController {
     }
 
     @PostMapping(value = "addConfig",produces="application/json;charset=UTF-8")
-    public Map<String ,Object> addConfig(@RequestBody Config config,@RequestParam int type){
+    public Map<String ,Object> addConfiga(@RequestBody Config config,@RequestParam int type){
         return  baseService.addConfig(config,type);
     }
 
     @PostMapping(value = "updateConfigByBatch",produces="application/json;charset=UTF-8")
-    public Map<String ,Object> updateConfigByBatch(@RequestBody List<Config> config){
+    public Map<String ,Object> updateConfigByBatcha(@RequestBody List<Config> config){
         return baseService.updateConfigByBatch(config);
     }
     @PostMapping(value = "removeConfig",produces="application/json;charset=UTF-8")
-    public Map<String ,Object> removeConfig(@RequestBody int id){
+    public Map<String ,Object> removeConfiga(@RequestBody int id){
        return baseService.deleteConfig(id);
     }
     @GetMapping(value = "findConfig",produces="application/json;charset=UTF-8")
-    public Map<String ,Object> findConfig(@RequestParam(defaultValue = "0") Integer id){
+    public Map<String ,Object> findConfiga(@RequestParam(defaultValue = "0") Integer id){
         return baseService.getConfig(id);
     }
     @PostMapping(value = "check/{state}",produces="application/json;charset=UTF-8")
-    public Map<String ,Object> check(@RequestBody List<Integer> ids,@RequestParam int type,@PathVariable int state){
+    public Map<String ,Object> checka(@RequestBody List<Integer> ids,@RequestParam int type,@PathVariable int state){
         if (state == 0){
             return baseService.checkByBatch(ids,type);
         }
@@ -171,7 +172,7 @@ public class BaseController {
 //        String basePath = "C:\\project\\dingding\\工作资料管理\\workingdata-master\\datamanagement\\target\\classes\\static\\attachment\\";
 //        System.out.println(basePath.substring(1,basePath.length()));
         Data data = new Data();
-        data.setDataId("9"+System.currentTimeMillis()+"123");
+        data.setDataId("9"+"8081"+System.currentTimeMillis());
         data.setDataType("9");
         data.setOwner(jobNumber);
         data.setOwnerName(name);
@@ -199,7 +200,7 @@ public class BaseController {
 
 
     @PostMapping("deleteAttachment")
-    public Map<String ,Object> deleteAttachment(@RequestBody PathVO path) throws FileNotFoundException {
+    public Map<String ,Object> deleteAttachmenta(@RequestBody PathVO path) throws FileNotFoundException {
         Map<String ,Object> map = new HashMap<>();
             try {
                 System.out.println(path.getDataPath()+"/"+path.getDataName());
@@ -221,34 +222,51 @@ public class BaseController {
 //        return "ok";
 //    }
     @GetMapping("download")
-    public void download(@RequestParam int id, HttpServletResponse response){
+    public void downloada(@RequestParam int id, HttpServletResponse response) {
         Query query = new Query();
         query.setId(id);
         query.setType(9);
-//        Map data = baseService.find(query);
-        Data data = ((List<Data>)baseService.find(query).get("list")).get(0);
-        String path = data.getDataPath()+File.separator+data.getDataName();
-//        String templateFile = "template.xls";
+        Data data = ((List<Data>) baseService.find(query).get("list")).get(0);
+        String path = data.getDataPath() + File.separator + data.getDataName();
         File f = new File(path);
-        try(InputStream in = new FileInputStream(f)) {
-        response.setContentType("application/force-download");
+        try (InputStream in = new FileInputStream(f)) {
+            response.setContentType("application/force-download");
 //        response.setContentType("application/octet-stream");
+            response.addHeader("Content-Disposition",
+                    "attachment;fileName=\"" + new String(data.getDataName().substring(13).getBytes("gbk"), "iso-8859-1") + "\"");
 
-        response.addHeader("Content-Disposition",
-                "attachment;fileName=\"" +  new String(data.getDataName().substring(13).getBytes("gbk"),"iso-8859-1")  + "\"");
-
-            IOUtils.copy(in,response.getOutputStream());
+            IOUtils.copy(in, response.getOutputStream());
             response.flushBuffer();
         } catch (FileNotFoundException e) {
-          e.printStackTrace();
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+        @GetMapping("infoDownload")
+        public void infoDownloada( HttpServletResponse response){
+
+            File f = new File(basePath+"教师信息.xls");
+            System.out.println(basePath+"教师信息.xls");
+            try(InputStream in = new FileInputStream(f)) {
+                response.setContentType("application/force-download");
+
+                response.addHeader("Content-Disposition",
+                        "attachment;fileName=\"" + new String("教师信息表.xls".getBytes("gbk"), "iso-8859-1")  + "\"");
+
+                IOUtils.copy(in,response.getOutputStream());
+                response.flushBuffer();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
     }
     @GetMapping("downloadBybatch")
-    public void downloadBybatch(@RequestParam List<Integer> ids, HttpServletResponse response) {
+    public void downloadBybatcha(@RequestParam List<Integer> ids, HttpServletResponse response) {
         List<String> path=new ArrayList<>();
         Query query = new Query();
         Data data;
@@ -308,25 +326,244 @@ public class BaseController {
         }
     }
     @PostMapping("addRole")
-    public Map addRole(@RequestBody Role role){
+    public Map addRolea(@RequestBody Role role){
         return baseService.addRole(role);
     }
     @GetMapping("finRole")
-    public Map findRole(){
+    public Map findRolea(){
         return baseService.findRole();
     }
 
+    @GetMapping("isLive")
+    public String isLivea(){
+        return"ok";
+    }
     @PostMapping("addPermission")
-    public Map addPermission(@RequestBody RoleToPermission role){
+    public Map addPermissiona(@RequestBody RoleToPermission role){
         return baseService.addRoleToPermission(role);
     }
 
     @PostMapping("addUserToRole")
-    public Map addUserToRole(@RequestBody UserToRole role){
+    public Map addUserToRolea(@RequestBody UserToRole role){
         return baseService.addUserToRole(role);
     }
 
+    @GetMapping("/exportBuildProject")
+    public String exportBuildProject(Query query,HttpServletResponse response) throws Exception {
+        query.setPageSize(Integer.MAX_VALUE);
+        SimpleDateFormat slf = new SimpleDateFormat("yyyy-MM-dd");
+        List<BuildProject> list = (List<BuildProject>) baseService.find(query).get("list");
+        String[] title=new String[]{"工号","姓名","课程编号","课程名称","建设时间","所属专业","授课方式"};
 
+        List<Object[]>  dataList = new ArrayList<Object[]>();
+        for(BuildProject a : list){
+            Object[] obj=new Object[7];
+            obj[0]=a.getJobNumber();
+            obj[1]=a.getName();
+            obj[2]=a.getProjectId();
+            obj[3]=a.getProjectName();
+            obj[4]=slf.format(a.getBuildDate());
+            obj[5]=a.getMajor();
+            obj[6]=a.getTeachingMethod();
+//            obj[7]=a.getBuildProject();
+//            obj[8]=a.getRecords();
+//            obj[9]=a.getTeacherReform();
+//            obj[10]=a.getTextBook();
+            for(int j=0;j<6;j++){if(obj[j]==null||obj[j].equals("")){obj[j]=" ";}}
+            dataList.add(obj);
+        }
+        WriteExcel ex = new WriteExcel(title, dataList);
+        InputStream in;
+        in = ex.export();
+        String fileName ="建设课程"+".xls";
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"),"iso-8859-1"));
+        try (OutputStream outputStream = response.getOutputStream()){
+            org.apache.commons.io.IOUtils.copy(in,outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @GetMapping("/exportAwardRecord")
+    public String exportAwardRecord(Query query,HttpServletResponse response) throws Exception {
+        query.setPageSize(Integer.MAX_VALUE);
+        SimpleDateFormat slf = new SimpleDateFormat("yyyy-MM-dd");
+        List<AwardRecords> list = (List<AwardRecords>) baseService.find(query).get("list");
+        String[] title=new String[]{"工号","姓名","获奖内容","获奖级别","获奖时间"};
+
+        List<Object[]>  dataList = new ArrayList<Object[]>();
+        for(AwardRecords a : list){
+            Object[] obj=new Object[5];
+            obj[0]=a.getJobNumber();
+            obj[1]=a.getName();
+            obj[2]=a.getAwardContent();
+            obj[3]=a.getAwardLevel();
+            obj[4]=slf.format(a.getAwardDate());
+            for(int j=0;j<4;j++){if(obj[j]==null||obj[j].equals("")){obj[j]=" ";}}
+            dataList.add(obj);
+        }
+        WriteExcel ex = new WriteExcel(title, dataList);
+        InputStream in;
+        in = ex.export();
+        String fileName ="获奖记录"+".xls";
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"),"iso-8859-1"));
+        try (OutputStream outputStream = response.getOutputStream()){
+            org.apache.commons.io.IOUtils.copy(in,outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping("/exportGuideRecord")
+    public String exportGuideRecord(Query query,HttpServletResponse response) throws Exception {
+        query.setPageSize(Integer.MAX_VALUE);
+        SimpleDateFormat slf = new SimpleDateFormat("yyyy-MM-dd");
+        List<GuideRecord> list = (List<GuideRecord>) baseService.find(query).get("list");
+        String[] title=new String[]{"工号","姓名","竞赛内容","竞赛类型","指导时间","学生姓名","学生学号","学生班级","学生类型"};
+
+        List<Object[]>  dataList = new ArrayList<Object[]>();
+        for(GuideRecord a : list){
+            Object[] obj=new Object[9];
+            obj[0]=a.getJobNumber();
+            obj[1]=a.getName();
+            obj[2]=a.getCompetitionName();
+            obj[3]=a.getCompetitionType();
+            obj[4]=slf.format(a.getGuideDate());
+            obj[5]=a.getStudentName();
+            obj[6]=a.getStudentNumber();
+            obj[7]=a.getStudentClass();
+            obj[8]=a.getStudentType().equals("1")?"本科":"研究生";
+//            obj[9]=a.getTeacherReform();
+//            obj[10]=a.getTextBook();
+            for(int j=0;j<8;j++){if(obj[j]==null||obj[j].equals("")){obj[j]=" ";}}
+            dataList.add(obj);
+        }
+        WriteExcel ex = new WriteExcel(title, dataList);
+        InputStream in;
+        in = ex.export();
+        String fileName ="指导记录"+".xls";
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"),"iso-8859-1"));
+        try (OutputStream outputStream = response.getOutputStream()){
+            org.apache.commons.io.IOUtils.copy(in,outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping("/exportProjectAssess")
+    public String exportProjectAssess(Query query,HttpServletResponse response) throws Exception {
+        query.setPageSize(Integer.MAX_VALUE);
+        SimpleDateFormat slf = new SimpleDateFormat("yyyy-MM-dd");
+        List<ProjectAssess> list = (List<ProjectAssess>) baseService.find(query).get("list");
+        String[] title=new String[]{"工号","姓名","课程编号","课程名称","考核时间","考核方式"};
+
+        List<Object[]>  dataList = new ArrayList<Object[]>();
+        for(ProjectAssess a : list){
+            Object[] obj=new Object[6];
+            obj[0]=a.getJobNumber();
+            obj[1]=a.getName();
+            obj[2]=a.getProjectId();
+            obj[3]=a.getProjectName();
+            obj[4]=slf.format(a.getAssessDate());
+            if("1".equals(a.getAssessMode())){
+                obj[5]="试卷";
+            }else if("2".equals(a.getAssessMode())){
+                obj[5]="大作业";
+            }else obj[5]="其他";
+
+            for(int j=0;j<5;j++){if(obj[j]==null||obj[j].equals("")){obj[j]=" ";}}
+            dataList.add(obj);
+        }
+        WriteExcel ex = new WriteExcel(title, dataList);
+        InputStream in;
+        in = ex.export();
+        String fileName ="考核方式"+".xls";
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"),"iso-8859-1"));
+        try (OutputStream outputStream = response.getOutputStream()){
+            org.apache.commons.io.IOUtils.copy(in,outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping("/exportTextBook")
+    public String exportTextBook(Query query,HttpServletResponse response) throws Exception {
+        query.setPageSize(Integer.MAX_VALUE);
+        SimpleDateFormat slf = new SimpleDateFormat("yyyy-MM-dd");
+        List<TextBook> list = (List<TextBook>) baseService.find(query).get("list");
+        String[] title=new String[]{"工号","姓名","教材名称","教材类型","出版时间","撰写内容","教材简介","isbn","出版社"};
+
+        List<Object[]>  dataList = new ArrayList<Object[]>();
+        for(TextBook a : list){
+            Object[] obj=new Object[9];
+            obj[0]=a.getJobNumber();
+            obj[1]=a.getName();
+            obj[2]=a.getTextbook();
+            obj[3]=a.getType();
+            obj[4]=slf.format(a.getPublishDate());
+            obj[5]=a.getCompose();
+            obj[6]=a.getIntroduce();
+            obj[7]=a.getIsbn();
+            obj[8]=a.getPress();
+            for(int j=0;j<8;j++){if(obj[j]==null||obj[j].equals("")){obj[j]=" ";}}
+            dataList.add(obj);
+        }
+        WriteExcel ex = new WriteExcel(title, dataList);
+        InputStream in;
+        in = ex.export();
+        String fileName ="出版教材"+".xls";
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"),"iso-8859-1"));
+        try (OutputStream outputStream = response.getOutputStream()){
+            org.apache.commons.io.IOUtils.copy(in,outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping("/exportTeacherReform")
+    public String exportTeacherReform(Query query,HttpServletResponse response) throws Exception {
+        query.setPageSize(Integer.MAX_VALUE);
+        SimpleDateFormat slf = new SimpleDateFormat("yyyy-MM-dd");
+        List<TeachingReform> list = (List<TeachingReform>) baseService.find(query).get("list");
+        String[] title=new String[]{"工号","姓名","课题编号","课题名称","申报时间","课题类型","主持人","课题简介"};
+        List<Object[]>  dataList = new ArrayList<Object[]>();
+        for(TeachingReform a : list){
+            Object[] obj=new Object[8];
+            obj[0]=a.getJobNumber();
+            obj[1]=a.getName();
+            obj[2]=a.getProjectId();
+            obj[3]=a.getProjectName();
+            obj[4]=slf.format(a.getReportTime());
+            obj[5]=a.getProjectType();
+            obj[6]=a.getCompere();
+            obj[7]=a.getProjectIntroduce();
+            for(int j=0;j<7;j++){if(obj[j]==null||obj[j].equals("")){obj[j]=" ";}}
+            dataList.add(obj);
+        }
+        WriteExcel ex = new WriteExcel(title, dataList);
+        InputStream in;
+        in = ex.export();
+        String fileName ="教改课题"+".xls";
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"),"iso-8859-1"));
+        try (OutputStream outputStream = response.getOutputStream()){
+            org.apache.commons.io.IOUtils.copy(in,outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 

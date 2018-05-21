@@ -135,8 +135,9 @@
         where jobNumber = #{jobNumber}
     </update>
 
+
     <select id="getTeacher" resultType="TeacherVO" parameterType="TeacherQuery">
-        select t.id, name, t.jobNumber,sex, depName as department,depId, professionalTitle,duty, phoneNumber,u.roleId as permission from t_teacher t left join t_user_role u  on t.jobNumber = u.jobNumber left join t_department d on t.department= d.depId
+        select t.id, name, t.jobNumber,sex, depName as department,depId, professionalTitle,duty, phoneNumber,u.roleId as permission,t.permission as permiss from t_teacher t left join t_user_role u  on t.jobNumber = u.jobNumber left join t_department d on t.department= d.depId
         <where>
             <if test="id != null">
                 id = #{id}
@@ -150,19 +151,18 @@
             <if test="permission != null">
                 permission = #{permission}
             </if>
-
        </where>
         <trim prefix="ORDER BY" prefixOverrides=",">
-            <if test="awardRecordSort=='true'.toString()">
+            <if test="awardRecordSort=='true'.toString() and awardRecordSort != ''">
                 ,records desc
             </if>
-            <if test="teacherRefromSort=='true'.toString()">
+            <if test="teacherRefromSort=='true'.toString() and teacherRefromSort != ''">
                 ,teacherReform desc
             </if>
-            <if test="buildProjectSort=='true'.toString()">
+            <if test="buildProjectSort=='true'.toString() and buildProjectSort != ''">
                 ,buildProject desc
             </if>
-            <if test="textBookSort=='true'.toString()">
+            <if test="textBookSort=='true'.toString() and textBookSort != ''">
                 ,textBook desc
             </if>
             <if test="textBookSort=='true' or awardRecordSort=='true' or teacherRefromSort=='true' or buildProjectSort=='true'.toString()">

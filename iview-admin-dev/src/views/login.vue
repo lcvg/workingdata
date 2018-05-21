@@ -62,9 +62,9 @@ export default {
         return {
             tip:"",
             msg:'',
-            url:"http://localhost:8070/getImg",
+            url:"/getImg",
             form: {
-                userName: '03442',
+                userName: '',
                 password: '',
                 validateCode:''
             },
@@ -83,7 +83,7 @@ export default {
     },
     methods: {
         getImg(){
-            this.url="http://localhost:8070/getImg?time="+new Date()
+            this.url="/getImg?time="+new Date()
         },
         handleSubmit () {
             this.$refs.loginForm.validate((valid) => {
@@ -102,8 +102,6 @@ export default {
                         if(response.data.msg== "success"){
                             // Cookies.set('teacher',  response.data.teacher);
                             localStorage.setItem("teacher",JSON.stringify(response.data.teacher));
-                            
-                          
                             Cookies.set('user', response.data.teacher.name);
                             if(response.data.teacher.permission=="1"){
                                 Cookies.set('access', 1);

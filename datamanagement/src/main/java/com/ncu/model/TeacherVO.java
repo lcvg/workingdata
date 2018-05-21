@@ -19,9 +19,18 @@ public class TeacherVO extends Teacher {
     private Integer teacherReform;
 
     private String depId;
+    private String permiss;
 
     public String getDepId() {
         return depId;
+    }
+
+    public String getPermiss() {
+        return permiss;
+    }
+
+    public void setPermiss(String permiss) {
+        this.permiss = permiss;
     }
 
     public void setDepId(String depId) {

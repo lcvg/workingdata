@@ -4,11 +4,13 @@ spring:
       database-platform: MYSQL
     datasource:
         name: test
-        url: jdbc:mysql://127.0.0.1:3306/datamanagement?allowMultiQueries=true
+        url: jdbc:mysql://8.9.6.166:3306/datamanagement?allowMultiQueries=true
+#        url: jdbc:mysql://39.104.108.113:3306/data?allowMultiQueries=true
         username: root
 
 
-#        password: hcy1845939728
+#        password: ShuMei123_
+        password: 184593
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
@@ -31,7 +33,7 @@ spring:
 
 
 server:
-  port: 8070
+  port: 8080
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
@@ -39,7 +41,8 @@ mybatis:
 logging:
   pattern:
     console: "%d - %msg%n"
-  path: C:\logs
+#  path: C:\logs
+  path: /usr/log
   level:
     com.ncu.dao: DEBUG
 #  file: C:\logs
@@ -55,5 +58,6 @@ pagehelper:
 #    dialect: com.github.pagehelper.dialect.helper.MySqlDialect
 
 
-attachmentUrl: C:\project\dingding\工作资料管理\workingdata-master\datamanagement\target\classes\static\attachment\
+attachmentUrl: /home/static/
+#attachmentUrl: C:\Users\12909\Desktop\3-19\
 

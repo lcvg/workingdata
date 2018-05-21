@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <div>
         <template v-for="(item, index) in menuList">
             <div style="text-align: center;" :key="index">
@@ -55,4 +55,3 @@ export default {
     }
 };
 </script>
- -->

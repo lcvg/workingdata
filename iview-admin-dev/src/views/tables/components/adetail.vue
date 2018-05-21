@@ -21,14 +21,17 @@
                 <label>获奖时间：</label><span>{{awardDate}}</span>
             </div>
             
-         
+         <!-- <Steps :current="2" size="small">
+            <Step title="待审核"></Step>
+            <Step title="已完成"></Step>
+        </Steps> -->
            
             <div class="line">
                 <label>状 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</label><span v-f>{{state}}</span>
             </div>
             <div class="line">
                 <label>附 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</label>
-                <tr v-for="item of this.listData"><td><a :href="'http://localhost:8070/download?id='+item.id">{{item.dataName.substring(13)}}</a></td></tr>
+                <tr v-for="item of this.listData"><td><a :href="'/download?id='+item.id">{{item.dataName.substring(13)}}</a></td></tr>
                 <!-- <span v-for="item of this.listData">{{item.dataName}}</span> -->
             </div>
            

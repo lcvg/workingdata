@@ -49,6 +49,7 @@
  
 
          <i-button type="default" class="remove" v-if="kjMod"  icon="ios-trash-outline" @click="remove">批量删除</i-button>
+         <i-button type="default"  icon="ios-download-outline" class="check" @click="exportTeacherReform">导出</i-button>
             <i-button type="default" class="check" v-if="kj"  icon="ios-checkmark-outline" @click="checkSuccess(0)">审核通过</i-button>
             <i-button type="default" class="check" v-if="kj" icon="ios-minus-outline" @click="checkSuccess(1)">审核不通过</i-button>
        
@@ -82,19 +83,7 @@ import Tdetail from './components/tdetail.vue';
 const editButton = (h,vm,params) => {
 
     if(vm.InfojobNumber!=undefined){
-        return h('Button', {
-        props: {
-            type: 'primary'
-        },
-        style: {
-            margin: '0 5px'
-        },
-        on: {
-            'click': () => {
-               vm.$refs.mod.show(1,params.row,1)
-            }
-        }
-    },  '审核');
+       return;
     }
 
     return h('Button', {
@@ -170,6 +159,7 @@ export default {
             // columnsList: [],
             sel:"",
             identifyItem:"",
+            query:[],
             kjMod:false,
             identify:"",
             kj:false,
@@ -290,6 +280,14 @@ export default {
         };
     },
     methods: {
+         exportTeacherReform(){
+            let params= ''
+            for(var key in this.query){
+                params=params+key+"="+this.query[key]+"&"
+                // alert(key+':'+this.query[key]);
+                }
+            window.location.href = "/exportTeacherReform?"+params
+        },
         showMod:function() {
             if(this.kj==true){
                 this.kjMod = false
@@ -347,7 +345,12 @@ export default {
                 idList.push(value.id) 
                   
             });
-           this.handleDel(idList);
+            if(idList.length==0){
+                this.$Message.info('请选择教改课题！！！');
+
+            }else{
+                this.handleDel(idList);
+            }
             
         },
        
@@ -407,9 +410,7 @@ export default {
                  }
                 
              }
-             
-            //  alert(this.jobNumber)
-            // alert(JSON.parse(localStorage.teacher).jobNumber)
+             this.query =query;
              this.currentPage =  pageNum;
              this.$axios.get('/find', {params: query})
                 .then(function (res) {

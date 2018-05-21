@@ -15,13 +15,19 @@
     
     <div>
       
-     <Input type="file" @on-change="importf($event.target)" id="file" />
-     <table class="bordered">
-
-         <div id="demo"></div>
-     </table>
+     <input type="file" ref="finp" @change="getFile"  id="file" />
+     <i-button type="default" class="remove"  icon="plus" @click="add">批量添加</i-button>
+     <i-button type="default"  icon="ios-download-outline" class="export" @click="download">样表下载</i-button>
+     <Row>
+            <Col span="24" class="padding-left-0">
+                <Card >
+                    <div class="edittable-con-1 padding-left-10">
+                      <Table border ref="selection" :columns="columnsList" :data="tableData"></Table>
+                    </div>
+                </Card>
+            </Col>
+        </Row>
         
-         <!-- <Table border ref="selection" :columns="columnsList" :data="tableData"></Table> -->
       </div>
 </template>
  
@@ -44,24 +50,112 @@ export default {
         return {
            wb:'',
            rABS:false,
-           columnsList:[{
-            title:"1",
-            key:"也"
-           },{
-            title:"2",
-            key:"是"
-           }
-           
-           ],
-           tableData:[{是:"ss"}]
+           columnsList : [
+             {
+                title: '全选',
+                // key: 'id',
+                width: 80,
+                // align: 'center',s
+                // checkable: true,
+                type: 'selection',
+                className:'tableCheck'
+               
+            },
+            
+            
+            {
+                title: '姓名',
+                align: 'center',
+                key: 'name'
+            },
+            {
+                title: '工号',
+                align: 'center',
+                key: 'jobNumber'
+            },
+            {
+                title: '性别',
+                align: 'center',
+                key: 'sex'
+            },
+             {
+                title: '所属部门',
+                align: 'center',
+                key: 'department'
+            },
+            {
+                title: '职称',
+                align: 'center',
+                key: 'professionalTitle'
+            },
+             {
+                title: '职务',
+                align: 'center',
+                key: 'duty'
+            },
+            {
+                title: '联系电话',
+                align: 'center',
+                key: 'phoneNumber'
+            },
+            
+           {
+                title: '权限',
+                align: 'center',
+                key: 'permission'   
+            },
+             {
+                title: '密码',
+                align: 'center',
+                key: 'password'   
+            }
+        
+        ],
+            
+        
+          tableData:[]
             
         };
     },
     methods: {
-       importf(obj) {//导入
+          getFile (e) {
+              this.importf(this);
+             },
+             download(){
+                window.location.href = "/infoDownload"
+             },
+             add(tem) {
+                var vm = this;
+                this.$axios.post('/addTeacherByBatch', this.tableData)
+                    .then(function(response) {
+                        if (response.data.code == 0) {
+                            vm.$Message.destroy();
+                            vm.$Notice.success({
+                                title: '添加成功！！！',
+                                duration: 2
+                            });
+                            vm.tableData=[]
+    
+                        } else {
+                            vm.$Message.destroy();
+                            vm.$Notice.error({
+    
+                                title: '添加失败！！！',
+                                duration: 2
+                            });
+                        }
+                    })
+                    .catch(function(err) {
+                    })
+    
+            },
+            importf(vm) {//导入
+                let obj = document.getElementById("file")
+                console.log(this.$refs.finp.files)
                 var wb = this.wb;
                 var rABS = this.rABS;
-                console.log(obj)
+               
+                console.log(document.getElementById('file').files)
                 if(!obj.files) {
                     return;
                 }
@@ -78,28 +172,26 @@ export default {
                             type: 'binary'
                         });
                     }
-                    console.log(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]))
-                    //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
-                    //wb.Sheets[Sheet名]获取第一个Sheet的数据
-                     var data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-                     var $th = $("<tr><th>诉求主题</th><th>联系人</th><th>联系人</th><th>操作</th></tr>");
-                     $th.appendTo("#demo")
                     
-                    for( var i = 0; i < data.length; i++ ) {
-                        var $trTemp = $("<tr  class='info'></tr>");
-
-                //往行里面追加 td单元格
-                        $trTemp.append("<td>"+ data[i].诉求主题 +"</td>");
-                        $trTemp.append("<td>"+ data[i].交办人 +"</td>");
-                        $trTemp.append("<td>"+ data[i].联系人 +"</td>");
-                        $trTemp.append("<td><Button @click.native='delete' >删除</Button></td>");
-                // $("#J_TbData").append($trTemp);
-              
+                    console.log(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]))
+                    let resData  = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                    
+                    
+                    for(let d of resData){
+                        let item = {};
+                        item["jobNumber"] = d["工号"];
+                        item["name"] = d["姓名"];
+                        item["professionalTitle"] = d["职称"];
+                        item["sex"] = d["性别"];
+                        item["phoneNumber"] = d["联系电话"];
+                        item["duty"] = d["职务"];
+                        item["department"] = d["部门"];
+                        item["password"] = d["密码"];
+                        item["permission"] = 2;
+                        vm.tableData.push(item)
                     }
-                    // alert(html)
-                    // document.getElementById("demo").innerHTML = '<Table border  :columns="columnsList" :data="tableData"></Table> '
-                    $trTemp.appendTo("#demo");
-                    // document.getElementById("demo").append("<td>ffff</td>");
+                    console.log(vm.tableData)
+                    // vm.tableData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
 
                 };
                 if(rABS) {
@@ -118,11 +210,6 @@ export default {
                             return o;
             },
 
-            delete(){
-                  alert(1)
-            }
-                          
-       
     },
     created () {
        

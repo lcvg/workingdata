@@ -27,7 +27,7 @@
                     <Option value="2">指导记录</Option> 
                     <Option value="3">课程考核</Option> 
                     <Option value="7">公告</Option>
-                     <Option value="9">教案</Option>
+                     <Option value="9">其他资料</Option>
                     <Option value="5">出版教材</Option>
                 </Select>
                 <Select v-model="check" placeholder="查询条件" clearable slot="prepend" class="select" >
@@ -127,7 +127,22 @@ export default {
             {
                 title: '附件名称',
                 align: 'center',
-                key: 'dataName'
+                key: 'dataName',
+                render: (h, params) => {
+                     return h('div', [
+                           h('span', {
+                                style: {
+
+                                    margin: '0 5px'
+                                },
+                                props: {
+                                    type: 'error',
+                                    placement: 'top'
+                                }
+                            },  params.row.dataName.substring(13))
+
+                            ]);
+                        }
             },
              {
                 title: '附件编号',
@@ -247,14 +262,14 @@ export default {
             
         },
         download(id){
-            window.location.href="http://localhost:8070/download?id="+id;
+            window.location.href="/download?id="+id;
         },
        downloadBatch(ids){
            let params = "";
            for(let id of ids){
                params+="ids="+id+"&";
            }
-           window.location.href="http://localhost:8070/downloadBybatch?"+params
+           window.location.href="/downloadBybatch?"+params
           
        },
          get(type,query,pageNum){
@@ -268,6 +283,10 @@ export default {
              this.$axios.get('/find', {params: query})
                 .then(function (response) {
                     vm.dataCount = response.data.size;
+                    // for(d of response.data.list){
+                    //     d["dataName"] = d["dataName"].substring(13)
+                    //     console.log(d.dataName)
+                    // }
                       vm.tableData = response.data.list;
                    
                 })

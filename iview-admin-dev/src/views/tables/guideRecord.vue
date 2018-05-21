@@ -36,6 +36,7 @@
                 <Button slot="append" @click="search" icon="ios-search" type="primary" style="outline: none"></Button>
             </Input>
             <i-button type="default" class="remove" v-if="kjMod"  icon="ios-trash-outline" @click="remove">批量删除</i-button>
+             <i-button type="default"  icon="ios-download-outline" class="check" @click="exportGuideRecord">导出</i-button>
             <i-button type="default" class="check" v-if="kj"  icon="ios-checkmark-outline" @click="checkSuccess(0)">审核通过</i-button>
             <i-button type="default" class="check" v-if="kj" icon="ios-minus-outline" @click="checkSuccess(1)">审核不通过</i-button>
         
@@ -70,19 +71,7 @@ import Gdetail from './components/gdetail.vue';
 const editButton = (h,vm,params) => {
     
     if(vm.InfojobNumber!=undefined){
-        return h('Button', {
-        props: {
-            type: 'primary'
-        },
-        style: {
-            margin: '0 5px'
-        },
-        on: {
-            'click': () => {
-               vm.$refs.mod.show(6,params.row,1)
-            }
-        }
-    },  '审核');
+        return;
     }
    
     return h('Button', {
@@ -201,6 +190,7 @@ export default {
             opt:true,
             modal1: false,
             currentPage:1,
+            query:[],
             item:{},
             columnsList : [
              {
@@ -400,8 +390,21 @@ export default {
                 idList.push(value.id) 
                   
             });
-           this.handleDel(idList);
+            if(idList.length==0){
+                this.$Message.info('请选择指导记录！！！');
+
+            }else{
+                this.handleDel(idList);
+            }
             
+        },
+         exportGuideRecord(){
+            let params= ''
+            for(var key in this.query){
+                params=params+key+"="+this.query[key]+"&"
+                // alert(key+':'+this.query[key]);
+                }
+            window.location.href = "/exportGuideRecord?"+params
         },
        
         selectChange(selection){
@@ -425,6 +428,7 @@ export default {
                  }
                 
              }
+             this.query = query;;
              let vm = this;
              this.currentPage =  pageNum;
              this.$axios.get('/find', {params: query})

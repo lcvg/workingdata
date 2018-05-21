@@ -16,7 +16,7 @@
 
                     <Upload ref="upload" multiple :style="{display:'none'}"
                         :show-upload-list="false"
-                        action="http://localhost:8070/uploadCover"
+                        action="/uploadCover"
                         :on-format-error="handleFormatError"
                         
                         :on-success="handleSuccess"
@@ -194,7 +194,7 @@ export default {
              item["department"] = depList;
              item["state"] = '1';
              item["listData"] = this.listData;
-             alert(depList)
+            
              var vm = this;
                  this.$axios.post('/addNotice',item)
                     .then(function (response) {

@@ -12,7 +12,7 @@
                 :open-names="openedSubmenuArr"
                 :menu-list="menuList">
                 <div slot="top" class="logo-con">
-                    <img v-show="!shrink"  src="../images/logo.jpg" key="max-logo" />
+                    <img class="logoImg" v-show="!shrink"  src="../images/logo.jpg" key="max-logo" />
                     <img v-show="shrink" src="../images/logo-min.jpg" key="min-logo" />
                 </div>
             </shrinkable-menu>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="header-avator-con">
                     <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
-                    <lock-screen></lock-screen>
+                    <!-- <lock-screen></lock-screen> -->
                     <message-tip v-model="mesCount"  @setCount="setCount" ></message-tip>
                     
                     <theme-switch></theme-switch>
@@ -71,7 +71,7 @@
     import tagsPageOpened from './main-components/tags-page-opened.vue';
     import breadcrumbNav from './main-components/breadcrumb-nav.vue';
     import fullScreen from './main-components/fullscreen.vue';
-    import lockScreen from './main-components/lockscreen/lockscreen.vue';
+    // import lockScreen from './main-components/lockscreen/lockscreen.vue';
     import messageTip from './main-components/message-tip.vue';
     import themeSwitch from './main-components/theme-switch/theme-switch.vue';
     import Cookies from 'js-cookie';
@@ -83,7 +83,7 @@
             tagsPageOpened,
             breadcrumbNav,
             fullScreen,
-            lockScreen,
+            // lockScreen,
             messageTip,
             themeSwitch
         },
@@ -199,7 +199,7 @@
                     
                     //实现化WebSocket对象，指定要连接的服务器地址与端口  
 
-                    socket = new WebSocket("ws://localhost:8070/websocket");  
+                    socket = new WebSocket("ws://8.9.6.166:8080/websocket");  
                     //打开事件  
                     socket.onopen = function() {  
                         console.log("Socket 已打开");  

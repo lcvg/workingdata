@@ -52,7 +52,7 @@
             </div>
             <Upload ref="upload" multiple
                 :show-upload-list="false"
-                action="http://localhost:8070/uploadCover"
+                action="/uploadCover"
                 :on-format-error="handleFormatError"
                 
                 :on-success="handleSuccess"

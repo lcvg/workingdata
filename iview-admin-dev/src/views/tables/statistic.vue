@@ -51,17 +51,17 @@
             </Col>
             
         </Row>
-        <Row class="margin-top-10">
+        <!-- <Row class="margin-top-10">
             <Card>
                 <p slot="title" class="card-title">
                     <Icon type="ios-shuffle-strong"></Icon>
                     上周每日服务调用量(万)
                 </p>
-                <!-- <div class="line-chart-con">
+                <div class="line-chart-con">
                     <service-requests></service-requests>
-                </div> -->
+                </div>
             </Card>
-        </Row>
+        </Row> -->
     </div>
 </template>
 
@@ -149,7 +149,7 @@ export default {
           if(this.time.endDate!=""){
              params+="&endDate="+JSON.stringify(this.time.endDate).substring(1,11);
           }
-        window.location.href="http://localhost:8070/export?sortType=1,4,5,6"+params;
+        window.location.href="/export?sortType=1,4,5,6"+params;
       },
       getData(query){
              let vm = this;

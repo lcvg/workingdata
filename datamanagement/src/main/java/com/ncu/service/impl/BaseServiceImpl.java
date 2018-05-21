@@ -72,7 +72,7 @@ public class BaseServiceImpl implements BaseService {
                 for (AwardRecords ar : awardRecordsList){
                     awardRecordsDao.addAwardRecords(ar);
                     for(Data data : ar.getListData()){
-                        data.setDataId(AWARDRECORDS.getIndex()+""+System.currentTimeMillis()+"123");
+                        data.setDataId(AWARDRECORDS.getIndex()+""+"8081"+System.currentTimeMillis());
                         data.setDataType(AWARDRECORDS.getIndex()+"");
                         data.setOwner(owner);
                         data.setOwnerName(ownerName);
@@ -89,9 +89,10 @@ public class BaseServiceImpl implements BaseService {
 
             }else{
                 AwardRecords awardRecords = awardRecordsList.get(0);
+                awardRecords.setState("1");
                 dataDao.deleteByRecord(awardRecords.getId(),AWARDRECORDS.getIndex()+"");
                 for (Data data : awardRecords.getListData()){
-                    data.setDataId(AWARDRECORDS.getIndex()+""+System.currentTimeMillis()+"123");
+                    data.setDataId(AWARDRECORDS.getIndex()+""+"8081"+System.currentTimeMillis());
                     data.setDataType(AWARDRECORDS.getIndex()+"");
                     data.setOwner(owner);
                     data.setOwnerName(ownerName);
@@ -393,7 +394,7 @@ public class BaseServiceImpl implements BaseService {
                 for (GuideRecord guideRecord : guideRecords){
                     guideRecordDao.addGuideRecord(guideRecord);
                     for (Data data : guideRecord.getListData()){
-                        data.setDataId(GUIDERECORD.getIndex()+""+System.currentTimeMillis()+"123");
+                        data.setDataId(GUIDERECORD.getIndex()+""+"8081"+System.currentTimeMillis());
                         data.setDataType(GUIDERECORD.getIndex()+"");
                         data.setOwner(owner);
                         data.setOwnerName(ownerName);
@@ -410,9 +411,10 @@ public class BaseServiceImpl implements BaseService {
 
             }else{
                 GuideRecord guideRecord = guideRecords.get(0);
+                guideRecord.setState("1");
                 dataDao.deleteByRecord(guideRecord.getId(),GUIDERECORD.getIndex()+"");
                 for (Data data : guideRecord.getListData()){
-                    data.setDataId(GUIDERECORD.getIndex()+""+System.currentTimeMillis()+"123");
+                    data.setDataId(GUIDERECORD.getIndex()+""+"8081"+System.currentTimeMillis());
                     data.setDataType(GUIDERECORD.getIndex()+"");
                     data.setOwner(owner);
                     data.setOwnerName(ownerName);
@@ -488,7 +490,7 @@ public class BaseServiceImpl implements BaseService {
             try {
                 noticeDao.addNotice(notice);
                 for (Data data : notice.getListData()) {
-                    data.setDataId(NOTICE.getIndex()+""+System.currentTimeMillis()+"123");
+                    data.setDataId(NOTICE.getIndex()+""+"8081"+System.currentTimeMillis());
                     data.setDataType(NOTICE.getIndex()+"");
                     data.setOwner(owner);
                     data.setOwnerName(ownerName);
@@ -511,7 +513,7 @@ public class BaseServiceImpl implements BaseService {
                 dataDao.deleteByRecord(notice.getId(),NOTICE.getIndex()+"");
                 noticeDao.updateNotice(notice);
                 for (Data data : notice.getListData()) {
-                    data.setDataId(NOTICE.getIndex()+""+System.currentTimeMillis()+"123");
+                    data.setDataId(NOTICE.getIndex()+""+"8081"+System.currentTimeMillis());
                     data.setDataType(NOTICE.getIndex()+"");
                     data.setOwner(owner);
                     data.setOwnerName(ownerName);
@@ -549,7 +551,7 @@ public class BaseServiceImpl implements BaseService {
                 for (ProjectAssess projectAssess:projectAssesses){
                     projectAssessDao.addProjectAssess(projectAssess);
                     for(Data data : projectAssess.getListData()){
-                        data.setDataId(PROJECTASSESS.getIndex()+""+System.currentTimeMillis()+"123");
+                        data.setDataId(PROJECTASSESS.getIndex()+""+"8081"+System.currentTimeMillis());
                         data.setDataType(PROJECTASSESS.getIndex()+"");
                         data.setOwner(owner);
                         data.setOwnerName(ownerName);
@@ -565,9 +567,10 @@ public class BaseServiceImpl implements BaseService {
                 }
             }else{
                 ProjectAssess projectAssess = projectAssesses.get(0);
+                projectAssess.setState("1");
                 dataDao.deleteByRecord(projectAssess.getId(),PROJECTASSESS.getIndex()+"");
                 for (Data data: projectAssess.getListData()) {
-                    data.setDataId(PROJECTASSESS.getIndex()+""+System.currentTimeMillis()+"123");
+                    data.setDataId(PROJECTASSESS.getIndex()+""+"8081"+System.currentTimeMillis());
                     data.setDataType(PROJECTASSESS.getIndex()+"");
                     data.setOwner(owner);
                     data.setOwnerName(ownerName);
@@ -608,7 +611,7 @@ public class BaseServiceImpl implements BaseService {
                 for (TeachingReform teachingReform:teachingReforms){
                     teachingReformDao.addTeachingReform(teachingReform);
                     for(Data data : teachingReform.getListData()){
-                        data.setDataId(TEACHERREFORM.getIndex()+""+System.currentTimeMillis()+"123");
+                        data.setDataId(TEACHERREFORM.getIndex()+""+"8081"+System.currentTimeMillis());
                         data.setDataType(TEACHERREFORM.getIndex()+"");
                         data.setOwner(owner);
                         data.setOwnerName(ownerName);
@@ -624,9 +627,10 @@ public class BaseServiceImpl implements BaseService {
                 }
             }else{
                 TeachingReform teachingReform =teachingReforms.get(0);
+                teachingReform.setState("1");
                 dataDao.deleteByRecord(teachingReform.getId(),TEACHERREFORM.getIndex()+"");
                 for (Data data: teachingReform.getListData()) {
-                    data.setDataId(TEACHERREFORM.getIndex()+""+System.currentTimeMillis()+"123");
+                    data.setDataId(TEACHERREFORM.getIndex()+""+"8081"+System.currentTimeMillis());
                     data.setDataType(TEACHERREFORM.getIndex()+"");
                     data.setOwner(owner);
                     data.setOwnerName(ownerName);
@@ -668,7 +672,7 @@ public class BaseServiceImpl implements BaseService {
                 for (TextBook textBook:textBooks){
                     textBookDao.addTextBook(textBook);
                     for(Data data : textBook.getListData()){
-                        data.setDataId(TEXTBOOK.getIndex()+""+System.currentTimeMillis()+"123");
+                        data.setDataId(TEXTBOOK.getIndex()+""+"8081"+System.currentTimeMillis());
                         data.setDataType(TEXTBOOK.getIndex()+"");
                         data.setOwner(owner);
                         data.setOwnerName(ownerName);
@@ -684,9 +688,10 @@ public class BaseServiceImpl implements BaseService {
                 }
             }else{
                 TextBook textBook = textBooks.get(0);
+                textBook.setState("1");
                 dataDao.deleteByRecord(textBook.getId(),BUILDPROJECT.getIndex()+"");
                 for (Data data: textBook.getListData()) {
-                    data.setDataId(TEXTBOOK.getIndex()+""+System.currentTimeMillis()+"123");
+                    data.setDataId(TEXTBOOK.getIndex()+""+"8081"+System.currentTimeMillis());
                     data.setDataType(TEXTBOOK.getIndex()+"");
                     data.setOwner(owner);
                     data.setOwnerName(ownerName);
@@ -944,7 +949,7 @@ public class BaseServiceImpl implements BaseService {
                 for (BuildProject buildProject:buildProjects){
                     buildProjectDao.addBuildProject(buildProject);
                     for(Data data : buildProject.getListData()){
-                        data.setDataId(BUILDPROJECT.getIndex()+""+System.currentTimeMillis()+"123");
+                        data.setDataId(BUILDPROJECT.getIndex()+""+"8081"+System.currentTimeMillis());
                         data.setDataType(BUILDPROJECT.getIndex()+"");
                         data.setOwner(owner);
                         data.setOwnerName(ownerName);
@@ -959,9 +964,10 @@ public class BaseServiceImpl implements BaseService {
                 }
             }else{
                 BuildProject buildProject = buildProjects.get(0);
+                buildProject.setState("1");
                 dataDao.deleteByRecord(buildProject.getId(),BUILDPROJECT.getIndex()+"");
                 for (Data data: buildProject.getListData()) {
-                    data.setDataId(BUILDPROJECT.getIndex()+""+System.currentTimeMillis()+"123");
+                    data.setDataId(BUILDPROJECT.getIndex()+""+"8081"+System.currentTimeMillis());
                     data.setDataType(BUILDPROJECT.getIndex()+"");
                     data.setOwner(owner);
                     data.setOwnerName(ownerName);
@@ -970,7 +976,7 @@ public class BaseServiceImpl implements BaseService {
                     dataList.add(data);
                 }
 //                buildProject.getListData().forEach(data->{
-//                    data.setDataId(BUILDPROJECT.getIndex()+""+System.currentTimeMillis()+"123");
+//                    data.setDataId(BUILDPROJECT.getIndex()+""+"8081"+System.currentTimeMillis());
 //                    data.setDataType(BUILDPROJECT.getIndex()+"");
 //                    data.setOwner(owner);
 //                    data.setOwnerName(ownerName);

@@ -23,9 +23,9 @@ public interface TeacherService {
     /**
      * 批量添加教师
      * @param teacher
-     * @return 主键id
+     * @return
      */
-    Integer saveTeacherByBatch(List<Teacher> teacher);
+    Map<String,Object> saveTeacherByBatch(List<Teacher> teacher);
 
 
     /**

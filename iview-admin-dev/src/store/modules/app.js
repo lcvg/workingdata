@@ -39,6 +39,7 @@ const app = {
         },
         updateMenulist (state) {
             let accessCode = parseInt(Cookies.get('access'));
+            
             let menuList = [];
             appRouter.forEach((item, index) => {
                 if (item.access !== undefined) {

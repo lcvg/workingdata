@@ -38,7 +38,7 @@
             </div>
             <div class="line">
                 <label>附 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件：</label>
-                <tr v-for="item of this.listData"><td><a :href="'http://localhost:8070/download?id='+item.id">{{item.dataName.substring(13)}}</a></td></tr>
+                <tr v-for="item of this.listData"><td><a :href="'/download?id='+item.id">{{item.dataName.substring(13)}}</a></td></tr>
                 <!-- <span v-for="item of this.listData">{{item.dataName}}</span> -->
             </div>
     </Row>

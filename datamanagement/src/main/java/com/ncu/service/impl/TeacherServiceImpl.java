@@ -46,8 +46,6 @@ public class TeacherServiceImpl implements TeacherService {
     @Transactional
     public Map<String, Object> saveTeacher(Teacher teacher) {
         Map<String,Object> map = new HashMap<>();
-
-
         try {
             if(teacher.getId()!=null){
                 if(teacher.getPassword()!=null){
@@ -58,7 +56,6 @@ public class TeacherServiceImpl implements TeacherService {
             }else {
                 teacher.setPassword(Encrypte.jdkSHA1(teacher.getPassword()));
                 teacherDao.addTeacher(teacher);
-
             }
             if("1".equals(teacher.getPermission())){
                 UserToRole u = new UserToRole();
@@ -116,8 +113,20 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     @Transactional
-    public Integer saveTeacherByBatch(List<Teacher> teacher) {
-        return teacherDao.addTeacherByBatch(teacher);
+    public Map<String,Object> saveTeacherByBatch(List<Teacher> teacher) {
+        Map<String,Object> map = new HashMap<>();
+        try {
+            teacherDao.addTeacherByBatch(teacher);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("code",13);
+            map.put("msg","add teacher error");
+            return map;
+        }
+        map.put("code",0);
+        map.put("msg","ok");
+        return map;
+
     }
 
     @Override
@@ -131,30 +140,7 @@ public class TeacherServiceImpl implements TeacherService {
                 query.setPageSize(10);
             }
             Page<?> page = PageHelper.startPage(query.getPageNum(), query.getPageSize());
-//            List<TeacherVO> teachers = teacherDao.getTeacherAndCount(query);
-//            Collections.sort(teachers, new Comparator<TeacherVO>() {
-//                @Override
-//                public int compare(TeacherVO o1, TeacherVO o2) {
-//                    int i = o2.getRecords()-o1.getRecords();
-//                    System.out.println(i);
-//                    if(i==0 && query.getSortType().contains("1")){
-//                        i = o2.getBuildProject()-o1.getBuildProject();
-//                    }
-//                    if(i==0 && query.getSortType().contains("4")){
-//                        i = o2.getTeacherReform()-o1.getTeacherReform();
-//                    }
-//                    if(i==0 && query.getSortType().contains("5")){
-//                        i = o2.getTextBook()-o1.getTextBook();
-//
-//                    }
-//
-//                    return i;
-//                }
-//            });
-
-
             map.put("teacher", teacherDao.getTeacher(query));
-
             map.put("size", page.getTotal());
 
         }catch (Exception e){
@@ -216,9 +202,6 @@ public class TeacherServiceImpl implements TeacherService {
                 return i;
             }
         });
-
-
-
         return teacherList;
     }
 

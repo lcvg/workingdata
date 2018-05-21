@@ -51,8 +51,8 @@
                 <Button slot="append" @click="search" icon="ios-search" type="primary" style="outline: none"></Button>
             </Input>
             <i-button type="default" class="remove"  icon="ios-search" @click="remove">批量删除</i-button>
-            <i-button type="default"  icon="ios-download-outline" class="export" @click="get(1)">导出</i-button>
-            <teacher class="teacherMod" ref="mod" @ee="get(1,{},1)"></teacher>
+            <i-button type="default"  icon="ios-download-outline" class="export" @click="exportTeacher">导出</i-button>
+            <teacher class="teacherMod" ref="mod" @ee="changepage(currentPage)"></teacher>
         
            
         </Row> 
@@ -171,8 +171,8 @@ export default {
             // 初始化信息总条数
             dataCount:0,
             // 每页显示多少条
-            pageSize:5,
-         
+            pageSize:8,
+            query:'',
             tableData: [],
             attachment:[],
             sortType:"",
@@ -252,7 +252,13 @@ export default {
         getData () {
             this.get(1,{},1);
         },
-     
+        exportTeacher(){
+             let params= ''
+            for(var key in this.query){
+                params=params+key+"="+this.query[key]+"&" 
+                }
+            window.location.href="/exportTeacher?"+params
+        },
         changepage(index){
             if(this.sel=="11"){
                this.get(1,{teacherName:this.condition},index)
@@ -298,7 +304,7 @@ export default {
             query["awardRecordSort"]=this.awardRecordSort;
             query["textBookSort"]=this.textBookSort;
             query["teacherRefromSort"]=this.teacherRefromSort;
-            
+            this.query = query;
              let vm = this;
              this.currentPage =  pageNum;
              this.$axios.get('/findTeacher', {params: query})

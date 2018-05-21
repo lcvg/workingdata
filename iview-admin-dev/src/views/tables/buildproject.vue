@@ -37,6 +37,7 @@
                 <Button slot="append" @click="search" icon="ios-search" type="primary" style="outline: none"></Button>
             </Input>
             <i-button type="default" class="remove" v-if="kjMod" icon="ios-trash-outline" @click="remove">批量删除</i-button>
+            <i-button type="default"  icon="ios-download-outline" class="check" @click="exportBuildProject">导出</i-button>
             <i-button type="default" class="check" v-if="kj"  icon="ios-checkmark-outline" @click="checkSuccess(0)">审核通过</i-button>
             <i-button type="default" class="check" v-if="kj" icon="ios-minus-outline" @click="checkSuccess(1)">审核不通过</i-button>
             <modal :vis="vis" v-if="kjMod" ref="mod" @ee="changepage(currentPage)"></modal>
@@ -66,19 +67,7 @@ import batch from './components/batch.vue';
 import bdetail from './components/buildProjectDetail.vue';
 const editButton = (h,vm,params) => {
  if(vm.InfojobNumber!=undefined){
-        return h('Button', {
-        props: {
-            type: 'primary'
-        },
-        style: {
-            margin: '0 5px'
-        },
-        on: {
-            'click': () => {
-               vm.$refs.mod.show(1,params.row,1)
-            }
-        }
-    },  '审核');
+       return;
     }
 
 
@@ -170,6 +159,7 @@ export default {
             modal1: false,
             currentPage:1,
             jobNumber:'',
+            query:'',
             columnsList : [
              {
                 title: '全选',
@@ -254,6 +244,14 @@ export default {
     },
    
     methods: {
+        exportBuildProject(){
+            let params= ''
+            for(var key in this.query){
+                params=params+key+"="+this.query[key]+"&"
+                // alert(key+':'+this.query[key]);
+                }
+            window.location.href = "/exportBuildProject?"+params
+        },
         showMod:function() {
             if(this.kj==true){
                 this.kjMod = false
@@ -344,7 +342,7 @@ export default {
                   
             });
             if(idList.length==0){
-                this.$Message.info('请选择指导记录！！！');
+                this.$Message.info('请选择建设课程！！！');
 
             }else{
                 this.handleDel(idList);
@@ -375,6 +373,7 @@ export default {
              }
             let vm = this;
              this.currentPage =  pageNum;
+             this.query = query;
              this.$axios.get('/find', {params: query})
                 .then(function (response) {
                       vm.dataCount = response.data.size;

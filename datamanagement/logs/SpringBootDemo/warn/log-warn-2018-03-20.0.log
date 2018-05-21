@@ -1,2 +1,0 @@
-===2018-03-20 22:34:36.469 WARN  org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver Line:189 - Resolved exception caused by Handler execution: org.springframework.web.bind.MissingServletRequestParameterException: Required List parameter 'ids' is not present
-===2018-03-20 22:35:16.282 WARN  org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver Line:189 - Resolved exception caused by Handler execution: org.springframework.web.bind.MissingServletRequestParameterException: Required List parameter 'ids' is not present

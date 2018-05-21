@@ -49,9 +49,8 @@
             开始时间：<DatePicker class="time"  type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm"  v-model="projectAssess.beginDate"   ></DatePicker>
             结束时间：<DatePicker class="time"  type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm"   v-model="projectAssess.endDate" ></DatePicker>
         </Row> 
-        <i-button type="primary" class="add"  icon="ios-search" @click="apply">应用到全部</i-button>
-         <i-button type="primary" class="save"  icon="ios-search" @click="save">保存</i-button>
-          <i-button type="default" class="can"  icon="ios-search" @click="cansle">取消</i-button>
+        <i-button type="primary" class="add"  @click="apply">应用到全部</i-button>
+         <i-button type="primary" class="save"   @click="save">保存</i-button>
         </div>
     </div>
  

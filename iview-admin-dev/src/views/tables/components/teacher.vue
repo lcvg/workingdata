@@ -152,7 +152,7 @@
     
                 item["department"] = this.department;
                 item["password"] = "184593";
-                item["permission"] = "1";
+                item["permission"] = this.authority;
                 // js.push(item);
                 if (this.type == 0) {
     
@@ -188,12 +188,12 @@
                  this.type = edit;
                 if (edit == 1) {
     
-                     this.jobNumber = data.jobNumber;
+                    this.jobNumber = data.jobNumber;
                     this.name = data.name;
                     this.sex = data.sex;
                     this.professionalTitle = data.professionalTitle;
                     this.duty = data.duty;
-                    this.department = data.department;
+                    this.department = data.depId;
                     this.phoneNumber=data.phoneNumber;
                     if(data.permission=="1"){
                         this.authority = data.permission;
@@ -211,6 +211,7 @@
                     this.duty = "";
                     this.department = "";
                     this.authority = "";
+                    this.id = "";
                 }
                 this.modal1 = true;
             },

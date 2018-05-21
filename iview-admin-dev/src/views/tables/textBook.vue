@@ -35,6 +35,7 @@
                 <Button slot="append" @click="search" icon="ios-search" type="primary" style="outline: none"></Button>
             </Input>
             <i-button type="default" class="remove" v-if="kjMod"  icon="ios-trash-outline" @click="remove">批量删除</i-button>
+            <i-button type="default"  icon="ios-download-outline" class="check" @click="exportTextBook">导出</i-button>
              <i-button type="default" class="check" v-if="kj"  icon="ios-checkmark-outline" @click="checkSuccess(0)">审核通过</i-button>
             <i-button type="default" class="check" v-if="kj" icon="ios-minus-outline" @click="checkSuccess(1)">审核不通过</i-button>
         
@@ -67,19 +68,7 @@ import batch from './components/batch.vue';
 import Btdetail from './components/tbdetail.vue';
 const editButton = (h,vm,params) => {
      if(vm.InfojobNumber!=undefined){
-        return h('Button', {
-        props: {
-            type: 'primary'
-        },
-        style: {
-            margin: '0 5px'
-        },
-        on: {
-            'click': () => {
-               vm.$refs.mod.show(1,params.row,1)
-            }
-        }
-    },  '审核');
+        return;
     }
     return h('Button', {
         props: {
@@ -162,6 +151,7 @@ export default {
             check:"",
             kj:"",
             condition:"",
+            query:[],
             jobNumber:"",
             identifyItem:"",
             identify:"",
@@ -273,6 +263,14 @@ export default {
         };
     },
     methods: {
+         exportTextBook(){
+            let params= ''
+            for(var key in this.query){
+                params=params+key+"="+this.query[key]+"&"
+                // alert(key+':'+this.query[key]);
+                }
+            window.location.href = "/exportTextBook?"+params
+        },
         showMod:function() {
             if(this.kj==true){
                 this.kjMod = false
@@ -352,7 +350,12 @@ export default {
                 idList.push(value.id) 
                   
             });
-           this.handleDel(idList);
+            if(idList.length==0){
+                this.$Message.info('请选择出版教材！！！');
+
+            }else{
+                this.handleDel(idList);
+            }
             
         },
        
@@ -378,6 +381,7 @@ export default {
                  }
                 
              }
+             this.query = query;
              this.currentPage =  pageNum;
              this.$axios.get('/find', {params: query})
                 .then(function (res) {

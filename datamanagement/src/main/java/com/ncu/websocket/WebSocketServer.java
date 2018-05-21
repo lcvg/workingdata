@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 @ServerEndpoint(value = "/websocket")
 @Component
 public class WebSocketServer {
+
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
@@ -33,11 +34,11 @@ public class WebSocketServer {
         this.session = session;
         webSocketSet.add(this);     //加入set中
         addOnlineCount();           //在线数加1
-        log.info("有新连接加入！当前在线人数为" + getOnlineCount());
+//        log.info("有新连接加入！当前在线人数为" + getOnlineCount());
         try {
             sendMessage("连接成功");
         } catch (IOException e) {
-            log.error("websocket IO异常");
+//            log.error("websocket IO异常");
         }
     }
     //  //连接打开时执行
@@ -54,7 +55,7 @@ public class WebSocketServer {
     public void onClose() {
         webSocketSet.remove(this);  //从set中删除
         subOnlineCount();           //在线数减1
-        log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
+//        log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     /**
@@ -63,7 +64,7 @@ public class WebSocketServer {
      * @param message 客户端发送过来的消息*/
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("来自客户端的消息:" + message);
+//        log.info("来自客户端的消息:" + message);
 
         //群发消息
         for (WebSocketServer item : webSocketSet) {
@@ -82,7 +83,7 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误");
+//        log.error("发生错误");
         error.printStackTrace();
     }
 
@@ -96,7 +97,7 @@ public class WebSocketServer {
      * 群发自定义消息
      * */
     public static void sendInfo(String message) throws IOException {
-        log.info(message);
+//        log.info(message);
         for (WebSocketServer item : webSocketSet) {
             try {
                 item.sendMessage(message);

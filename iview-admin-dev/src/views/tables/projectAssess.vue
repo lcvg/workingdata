@@ -36,6 +36,7 @@
                 <Button slot="append" @click="search" icon="ios-search" type="primary" style="outline: none"></Button>
             </Input>
             <i-button type="default" class="remove" v-if="kjMod" icon="ios-trash-outline" @click="remove">批量删除</i-button>
+            <i-button type="default"  icon="ios-download-outline" class="check" @click="exportProjectAssess">导出</i-button>
             <i-button type="default" class="check" v-if="kj"  icon="ios-checkmark-outline" @click="checkSuccess(0)">审核通过</i-button>
             <i-button type="default" class="check" v-if="kj" icon="ios-minus-outline" @click="checkSuccess(1)">审核不通过</i-button>
         
@@ -67,19 +68,7 @@ import Pdetail from './components/pdetail.vue';
 const editButton = (h,vm,params) => {
     
     if(vm.InfojobNumber!=undefined){
-        return h('Button', {
-        props: {
-            type: 'primary'
-        },
-        style: {
-            margin: '0 5px'
-        },
-        on: {
-            'click': () => {
-               vm.$refs.mod.show(1,params.row,1)
-            }
-        }
-    },  '审核');
+       return;
     }
     return h('Button', {
         props: {
@@ -162,6 +151,7 @@ export default {
             kjMod:false,
             level:"",
             item:{},
+            query:[],
             condition:"",
             removeIds:[],
             jobNumber:"",
@@ -281,6 +271,14 @@ export default {
         getData () {
             this.get(3,{},1);
         },
+         exportProjectAssess(){
+            let params= ''
+            for(var key in this.query){
+                params=params+key+"="+this.query[key]+"&"
+                // alert(key+':'+this.query[key]);
+                }
+            window.location.href = "/exportProjectAssess?"+params
+        },
         checkState(state){
             if(state=="1"){
                 return "待审核";
@@ -318,7 +316,12 @@ export default {
                 idList.push(value.id) 
                   
             });
-           this.handleDel(idList);
+            if(idList.length==0){
+                this.$Message.info('请选择考核记录！！！');
+
+            }else{
+                this.handleDel(idList);
+            }
             
         },
        
@@ -377,6 +380,7 @@ export default {
                  }
                 
              }
+             this.query = query;
              let vm = this;
              this.currentPage =  pageNum;
              this.$axios.get('/find', {params: query})

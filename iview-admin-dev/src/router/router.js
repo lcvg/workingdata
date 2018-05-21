@@ -58,46 +58,47 @@ export const otherRouter = {
     children: [
         { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: resolve => { require(['@/views/home/home.vue'], resolve); } },
         { path: 'ownspace', title: '个人中心', name: 'ownspace_index', component: resolve => { require(['@/views/own-space/own-space.vue'], resolve); } },
-        { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: resolve => { require(['@/views/advanced-router/component/order-info.vue'], resolve); } }, // 用于展示动态路由
-        { path: 'shopping', title: '购物详情', name: 'shopping', component: resolve => { require(['@/views/advanced-router/component/shopping-info.vue'], resolve); } }, // 用于展示带参路由
-        { path: 'message', title: '消息中心', name: 'message_index', component: resolve => { require(['@/views/message/message.vue'], resolve); } },
+        { path: 'message', title: '公告消息', name: 'message_index', component: resolve => { require(['@/views/message/message.vue'], resolve); } },
         { path: 'info', title: '详细信息', name: 'teacher_info', component: resolve => { require(['@/views/tables/teacherInfo.vue'], resolve); } }
     ]
 };
 
 // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
 export const appRouter = [
+
+
     {
-        path: '/access',
-        icon: 'key',
-        name: 'access',
-        title: '权限管理',
+        path: '/',
+        icon: 'ios-people',
+        title: "教师管理",
+        access: 1,
+        name: 'teacher',
         component: Main,
         children: [
-            { path: 'index', title: '权限管理', name: 'access_index', component: resolve => { require(['@/views/access/access.vue'], resolve); } }
+            { path: 'teacher',  title: '教师',access: 1, name: 'teacher-table', icon: 'ios-person', component: resolve => { require(['@/views/tables/teacher.vue'], resolve); } },
+            // {path: 'notice', title: '发布公告',access: 1,  name: 'notice-table', icon: 'edit',  component: resolve => { require(['@/views/form/article-publish/article-publish.vue'], resolve); }},
+            // { path: 'noticeList', title: '公告列表', name: 'notice_index', component: resolve => { require(['@/views/message/messageList.vue'], resolve); } },
+            { path: 'teacherInfo', title: '详情',access: 1,  name: 'teacherInfo-table', icon: 'ios-information-outline',  component: resolve => { require(['@/views/tables/teacherInfo.vue'], resolve); }},
+            { path: 'statistics', title: '统计',access: 1,  name: 'statistics-table', icon: 'stats-bars',  component: resolve => { require(['@/views/tables/statistic.vue'], resolve); }}
         ]
     },
+
     {
-        path: '/access-test',
-        icon: 'lock-combination',
-        title: '权限测试页',
-        name: 'accesstest',
-        access: 0,
+        path: '/',
+        icon: 'android-notifications',
+        access: 1,
+        title: "公告",
+        name: 'notice',
         component: Main,
         children: [
-            { path: 'index', title: '权限测试页', name: 'accesstest_index', access: 0, component: resolve => { require(['@/views/access/access-test.vue'], resolve); } }
+            {path: 'notice', title: '发布公告',access: 1,  name: 'notice-table', icon: 'compose',  component: resolve => { require(['@/views/form/article-publish/article-publish.vue'], resolve); }},
+            { path: 'noticeList', title: '公告列表', name: 'notice_index',icon:'ios-list-outline', component: resolve => { require(['@/views/message/messageList.vue'], resolve); } },
         ]
     },
-    {
-        path: '/international',
-        icon: 'earth',
-        title: {i18n: 'international'},
-        name: 'international',
-        component: Main,
-        children: [
-            { path: 'index', title: {i18n: 'international'}, name: 'international_index', component: resolve => { require(['@/views/international/international.vue'], resolve); } }
-        ]
-    },
+
+
+
+
     {
         path: '/',
         icon: 'android-create',
@@ -109,21 +110,9 @@ export const appRouter = [
             { path: 'teachingReform', title: '教改课题', name: 'editable-table', icon: 'android-create', component: resolve => { require(['@/views/tables/teachingReform.vue'], resolve); } }
         ]
     },
-    {
-        path: '/',
-        icon: 'edit',
-        title: "教师管理",
-        access: 1,
-        name: 'teacher',
-        component: Main,
-        children: [
-            { path: 'teacher',  title: '教师管理',access: 1, name: 'teacher-table', icon: 'edit', component: resolve => { require(['@/views/tables/teacher.vue'], resolve); } },
-            {path: 'notice', title: '发布公告',access: 1,  name: 'notice-table', icon: 'edit',  component: resolve => { require(['@/views/form/article-publish/article-publish.vue'], resolve); }},
-            { path: 'noticeList', title: '公告列表', name: 'notice_index', component: resolve => { require(['@/views/message/messageList.vue'], resolve); } },
-            { path: 'teacherInfo', title: '详情',access: 1,  name: 'teacherInfo-table', icon: 'edit',  component: resolve => { require(['@/views/tables/teacherInfo.vue'], resolve); }},
-            { path: 'statistics', title: '统计',access: 1,  name: 'statistics-table', icon: 'edit',  component: resolve => { require(['@/views/tables/statistic.vue'], resolve); }}
-        ]
-    },
+
+
+
     {
         path: '/',
         icon: 'ios-world-outline',
@@ -180,18 +169,19 @@ export const appRouter = [
     },
     {
         path: '/',
-        icon: 'ios-book',
+        icon: 'document',
         title: "其他资料",
         name: 'plan',
         component: Main,
         children: [
-            { path: 'plan', title: '其他资料', name: 'plan-table', icon: 'ios-book',  component: resolve => { require(['@/views/tables/plan.vue'], resolve); }}
+            { path: 'plan', title: '其他资料', name: 'plan-table', icon: 'document',  component: resolve => { require(['@/views/tables/plan.vue'], resolve); }}
         ]
     },
     {
         path: '/',
         icon: 'android-attach',
         title: "附件管理",
+        access: 1,
         name: 'attachment',
         component: Main,
         
@@ -201,14 +191,14 @@ export const appRouter = [
     },
     {
         path: '/',
-        icon: 'android-attach',
+        icon: 'settings',
         title: "设置",
         name: 'config',
+        access: 1,
         component: Main,
-        
         children: [
-            { path: 'config', title: '设置', name: 'config-table', icon: 'android-attach',  component: resolve => { require(['@/views/tables/config.vue'], resolve); }},
-            { path: 'department', title: '部门管理', name: 'department-table', icon: 'android-attach',  component: resolve => { require(['@/views/tables/department.vue'], resolve); }}
+            { path: 'config', title: '设置有效时间', name: 'config-table', icon: 'ios-calendar-outline',  component: resolve => { require(['@/views/tables/config.vue'], resolve); }},
+            { path: 'department', title: '部门管理', name: 'department-table', icon: 'paper-airplane',  component: resolve => { require(['@/views/tables/department.vue'], resolve); }}
         ]
     },
     // {
@@ -236,22 +226,24 @@ export const appRouter = [
 
     {
         path: '/',
-        icon: 'earth',
+        icon: 'ios-pulse',
         title: "日志",
         name: 'log',
+        access: 1,
         component: Main,
         children: [
-            { path: 'log', title: '批量插入', name: 'log-table', icon: 'edit', component: resolve => { require(['@/views/tables/log.vue'], resolve); } }
+            { path: 'log', title: '批量插入', name: 'log-table', icon: 'ios-pulse', component: resolve => { require(['@/views/tables/log.vue'], resolve); } }
         ]
     },
   
   
       {
         path: '/',
-        icon: 'earth',
+        icon: 'plus',
         title: "批量插入",
         name: 'batchinsert',
         component: Main,
+        access: 1,
         children: [
             { path: 'batchinsert', title: '批量插入', name: 'batch-insert', icon: 'edit', component: resolve => { require(['@/views/tables/batch-insert.vue'], resolve); } }
         ]

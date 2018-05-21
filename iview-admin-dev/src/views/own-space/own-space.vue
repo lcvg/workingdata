@@ -116,6 +116,7 @@ export default {
                 department: ''
             },
             disabledInput:true,
+            permission:"",
             id: '',
             uid: '', // 登录用户的userId
             securityCode: '', // 验证码
@@ -208,25 +209,12 @@ export default {
         saveEdit () {
             this.$refs['userForm'].validate((valid) => {
                 if (valid) {
-                    alert(1)
-                    // if (this.phoneHasChanged && this.userForm.cellphone !== this.initPhone) { // 手机号码修改过了而且修改之后的手机号和原来的不一样
-                    //     if (this.hasGetIdentifyCode) { // 判断是否点了获取验证码
-                    //         if (this.identifyCodeRight) { // 判断验证码是否正确
-                    //             this.saveInfoAjax();
-                    //         } else {
-                    //             this.$Message.error('验证码错误，请重新输入');
-                    //         }
-                    //     } else {
-                    //         this.$Message.warning('请先点击获取验证码');
-                    //     }
-                    // } else {
-                    //     this.saveInfoAjax();
-                    // }
                     let item = {};
                     item["phoneNumber"]=this.userForm.cellphone;
                     item["jobNumber"] = this.userForm.jobNumber;
                     item["name"]= this.userForm.name;
                     item["id"]= this.id;
+                    item["permission"]=this.permission;
                     if(this.editPasswordForm.newPass!=""){
                         item["password"]=this.editPasswordForm.newPass;
                     }
@@ -281,6 +269,7 @@ export default {
              let vm = this;
              this.$axios.get('/findTeacher', {params: {jobNumber:JSON.parse(localStorage.teacher).jobNumber}})
                 .then(function (response) {
+                    console.log(response.data)
                     let data = response.data.teacher[0];
                     vm.userForm.name = data.name;
                     vm.userForm.cellphone = data.phoneNumber;
@@ -290,6 +279,7 @@ export default {
                     vm.userForm.professionalTitle = data.professionalTitle;
                     vm.userForm.department = data.department;
                     vm.id = data.id;
+                    vm.permission = data.permiss;
                    
                 })
                 .catch((response) => {

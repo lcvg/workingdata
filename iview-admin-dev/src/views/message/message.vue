@@ -36,7 +36,7 @@
                         <!-- <hr style="height:5px;border:none;border-top:5px ridge green;" /> -->
 
                         <div class="msg-title">以下是附件信息：</div>
-                          <p  class="message-content" v-for="item of mes.listData"><a :href="'http://localhost:8070/download?id='+item.id">{{item.dataName.substring(13)}}</a></p>
+                          <p  class="message-content" v-for="item of mes.listData"><a :href="'/download?id='+item.id">{{item.dataName.substring(13)}}</a></p>
                     </div>
                     
                 </div>
@@ -210,7 +210,9 @@ export default {
              query["type"]=type;
              query["pageNum"]=pageNum;
              query["pageSize"]=this.pageSize;
-             query["department"]=JSON.parse(localStorage.teacher).depId;
+             if(this.type!='1'){
+                query["department"]=JSON.parse(localStorage.teacher).depId+"@";
+             }
              
              let vm = this;
              this.currentPage =  pageNum;
@@ -224,7 +226,6 @@ export default {
                 });
         },
     },
-    
     mounted () {
         
         localStorage.setItem("messageCount",0);

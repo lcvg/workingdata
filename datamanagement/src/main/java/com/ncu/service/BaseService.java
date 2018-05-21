@@ -49,7 +49,8 @@ public interface BaseService {
     Map<String,Object> addGuideRecordByBatch(List<GuideRecord> guideRecords) ;
 //
 //    /*日志*/
-    int addLog(Log log) ;
+    int addLog(Log log);
+    void saveLog(String operation,String operationName,String jobNumber);
     Map<String,Object> deleteLogByBatch(List<Integer> ids);
 //
 //    /*公告*/
